@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const mysql = require("mysql");
-const dbconfig = require("./dbconfig.js");
+const dbconfig = require("./configDb.js");
 
 
 // parse HTTP POST Data 
