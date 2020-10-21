@@ -16,17 +16,6 @@ body {
 
 }
 
-.quiz-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.quiz {
-  display: flex;
-  justify-content: left;
-}
-
 h1 {
   text-align: center;
 }
