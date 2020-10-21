@@ -2,7 +2,7 @@
 const express = require('express');
 const app = express();
 const mysql = require("mysql");
-const dbconfig = require("./dbconfig.js");
+const configDb = require("./configDb.js");
 
 
 // parse HTTP POST Data 
@@ -14,7 +14,7 @@ app.use(bodyParser.json()); // accept json data
 app.use(express.static('../frontend'));
 
 
-connection = mysql.createConnection(dbconfig.dbSettings);
+connection = mysql.createConnection(configDb.dbSettings);
 connection.connect((err) => {
     if(err) {
         console.log('Error connecting to DB: change connection settings!');
