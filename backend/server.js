@@ -32,7 +32,6 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
 }
 
-// should be async
 // save quiz name on DB
 app.post('/saveQuizName', (req, res) => {
   connection.query("INSERT INTO quiz (quiz_name) values (?)", escapeHtml(req.body.quizName), 
@@ -44,7 +43,6 @@ app.post('/saveQuizName', (req, res) => {
   );
 });
 
-// should be async
 // Post Questions on DB
 app.post('/postQuestions', (req, res) => {
   connection.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)", 

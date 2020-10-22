@@ -107,6 +107,9 @@ button {
   border-radius: 5px;
 }
 
-button:hover {
+button:active:hover {
   filter: brightness(200%);
+}
+.disabled {
+  background-color: darkgrey;
 }
