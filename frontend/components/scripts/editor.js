@@ -1,8 +1,9 @@
 // DOM 
 const submitQuizButton = document.getElementById('submitQuizButton');
 const questionFrom = document.getElementById('formQuestion');
-const nextButton = document.getElementById('nextButton');
+//const nextButton = document.getElementById('nextButton');
 const qiuzTitleForm = document.getElementById('formQuizTitle');
+const questionTemplateDiv = document.getElementById('questionTemplate');
 
 // data for create new Quiz
 const quizName = document.getElementById('quizName');
@@ -15,6 +16,9 @@ const radioButtons = document.getElementsByName('correct');
 
 // quiz name id
 var quizNameId;
+
+// question Number
+let questionNumber = 0;
 
 // get correct Answer
 let correctAnswer = ''; 
@@ -40,13 +44,45 @@ function displayNextQuestion() {
 
 // define question template to add new question
 const questionTemplate = `
-
+  <fieldset style="margin-top: 10px;">
+    <legend>Define Question</legend>
+    <label for="question">Question</label>
+    <input type="text" name="question" id="question" placeholder="Type Question" required>
+    <!-- Answers -->
+    <div class="answers-container">
+      <div class="answers-title">
+        <div class="answersTitle"><h3>Answers</h3></div>
+        <div class="correctTitle"><h3>Correct</h3></div>
+      </div>
+      <div class="answers-wraper">
+        <div class="answer">
+          <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
+          <input type="radio" name="correct" id="correctA">
+        </div>
+        <div class="answer">
+          <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
+          <input type="radio" name="correct" id="correctB">
+        </div>
+        <div class="answer">
+          <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
+          <input type="radio" name="correct" id="correctC">
+        </div>
+        <div class="answer">
+          <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
+          <input type="radio" name="correct" id="correctD">
+        </div>
+      </div>
+    </div>
+  </fieldset>
+  <div class="nextQuestion">
+  <input type="submit" value="NEXT" id="nextButton">
+  </div>
 
     `;
 
 // click Submit Button 
 function submitQuiz(event) {
-  window.location.href = "/quiz.html"
+  window.location.href = "../htmls/quiz.html"
 }
 
 // post Questions
@@ -75,6 +111,12 @@ async function postQuestions(event) {
     if(response.ok){
       console.log('question is posted!')
       // new question template HERE
+      questionTemplateDiv.innerHTML = '';
+      questionTemplateDiv.innerHTML = questionTemplate;
+    
+      // increment question number and display it
+      questionNumber++;
+      document.getElementById('questionNumber').textContent = questionNumber + " Question ADDED!";
 
     } else {
       console.log('eroor');
@@ -104,6 +146,10 @@ async function saveQuizName(event){
         console.log(quiz);
         console.log('quiz is posted! and quiz number is ' + quiz.id);
         quizNameId = quiz.id;
+        // save button should be disable
+        document.getElementById('quizTitleButton').disabled = true;
+        document.getElementById('quizTitleButton').classList.add('disabled');
+
       } else {
         console.log('eroor');
       }

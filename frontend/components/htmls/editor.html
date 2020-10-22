@@ -22,7 +22,7 @@
     </form>
     <form id="formQuestion">
     <!-- Questions -->
-    <div class="question-container">
+    <div class="question-container" id="questionTemplate">
       <fieldset style="margin-top: 10px;">
         <legend>Define Question</legend>
         <label for="question">Question</label>
@@ -36,7 +36,7 @@
           <div class="answers-wraper">
             <div class="answer">
               <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-              <input type="radio" name="correct" id="correctA">
+              <input type="radio" name="correct" id="correctA" checked>
             </div>
             <div class="answer">
               <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
@@ -58,6 +58,7 @@
       </div>
     </div>
   </form>
+  <p id="questionNumber"></p>
 
   <div class="submitQuiz">
     <input type="button" value="Submit Quiz" id="submitQuizButton">
