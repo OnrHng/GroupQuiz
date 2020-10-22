@@ -80,13 +80,33 @@ div.answer > input[type="radio"] {
   height: 90px;
  
 }
-#nextButton {
+#nextButton , #submitQuizButton {
   cursor: pointer;
   width: 100%;
   background-color: black;
   color: white;
   font-size: 18px;
 }
-#nextButton:hover {
+#nextButton:hover, #submitQuizButton {
+  filter: brightness(200%);
+}
+#submitQuizButton {
+  height: 50px;
+  bottom: 3px;
+}
+
+button {
+  cursor: pointer;
+  height: 30px;
+  background-color: black;
+  color: white;
+  font-size: 14px;
+  padding: 3px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+button:hover {
   filter: brightness(200%);
 }
