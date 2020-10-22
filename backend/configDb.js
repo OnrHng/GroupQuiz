@@ -1,8 +1,8 @@
 // define db settings here
 const dbSettings =  {
   host: "localhost",
-  user: "onr",
-  password: "3000",
+  user: "milica",
+  password: "1234",
   database: "quiz_game"
 };
 
