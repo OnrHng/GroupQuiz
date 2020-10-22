@@ -23,7 +23,6 @@ connection.connect((err) => {
     }
 });
 
-
 function escapeHtml(unsafe) {
     return unsafe
          .replace(/&/g, "&amp;")
@@ -33,10 +32,35 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
 }
 
+// should be async
+// save quiz name on DB
+app.post('/saveQuizName', (req, res) => {
+  connection.query("INSERT INTO quiz (quiz_name) values (?)", escapeHtml(req.body.quizName), 
+    (err, result) => {
+        if(err) throw rej(err);
+        console.log("created a new quiz name with id ", result.insertId);
+        res.json({id: result.insertId});
+    }
+  );
+});
 
+// should be async
+// Post Questions on DB
+app.post('/postQuestions', (req, res) => {
+  connection.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)", 
+  [req.body.quiz_Id, req.body.question, req.body.option1, req.body.option2,
+  req.body.option3, req.body.option4, req.body.correctAnswer], 
+    (err, result) => {
+        if(err) throw rej(err);
+        console.log("created a new question created with id ", result.insertId);
+        res.json({id: result.insertId});
+    }
+  );
+
+});
 
 // http://localhost:3000
 const PORT = 3000;
 app.listen(PORT, () => {
-    console.log(`Example app listening at http://localhost:${PORT}`);
+  console.log(`Example app listening at http://localhost:${PORT}`);
 });
