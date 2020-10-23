@@ -1,9 +1,10 @@
 // DOM 
 const submitQuizButton = document.getElementById('submitQuizButton');
 const questionFrom = document.getElementById('formQuestion');
-//const nextButton = document.getElementById('nextButton');
+const nextButton = document.getElementById('nextButton');
 const qiuzTitleForm = document.getElementById('formQuizTitle');
 const questionTemplateDiv = document.getElementById('questionTemplate');
+const quizTitleButton = document.getElementById('quizTitleButton');
 
 // data for create new Quiz
 const quizName = document.getElementById('quizName');
@@ -89,39 +90,43 @@ function submitQuiz(event) {
 async function postQuestions(event) {
   event.preventDefault();
   getCorrectAnswer();
-  console.log('next clicked')
-  console.log('correct answer is ' + correctAnswer);
-  fetch("/postQuestions", {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: "POST",
-    body: JSON.stringify({
-      quiz_Id: quizNameId,
-      question: question.value,
-      option1: answerA.value,
-      option2 : answerB.value,
-      option3 : answerC.value,
-      option4 : answerD.value,
-      correctAnswer: correctAnswer
-    })
-    }
-  ).then(function(response) {
-    if(response.ok){
-      console.log('question is posted!')
-      // new question template HERE
-      questionTemplateDiv.innerHTML = '';
-      questionTemplateDiv.innerHTML = questionTemplate;
-    
-      // increment question number and display it
-      questionNumber++;
-      document.getElementById('questionNumber').textContent = questionNumber + " Question ADDED!";
-
-    } else {
-      console.log('eroor');
-    }
-  });
+  
+  // if the quiz name is not saved show the message!!
+  if(quizTitleButton.disabled) {
+    fetch("/postQuestions", {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: "POST",
+      body: JSON.stringify({
+        quiz_Id: quizNameId,
+        question: question.value,
+        option1: answerA.value,
+        option2 : answerB.value,
+        option3 : answerC.value,
+        option4 : answerD.value,
+        correctAnswer: correctAnswer
+      })
+      }
+    ).then(function(response) {
+      if(response.ok){
+        console.log('question is posted!')
+        // new question template HERE
+        questionTemplateDiv.innerHTML = '';
+        questionTemplateDiv.innerHTML = questionTemplate;
+      
+        // increment question number and display it
+        questionNumber++;
+        document.getElementById('questionNumber').textContent = questionNumber + " Question ADDED!";
+  
+      } else {
+        console.log('eroor');
+      }
+    });
+  }else {
+    alert('Please Save Quiz Name!!!');
+  }
 
 }
 
