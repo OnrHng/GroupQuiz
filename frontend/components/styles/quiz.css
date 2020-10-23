@@ -9,18 +9,18 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     font-size: 300%;
     font-weight: 500;
     text-align: center;
-  
   }
-  .quiz {
-    width: 80%;
-    margin: auto;
-    margin-top: 100px;
-    margin-bottom: 100px;
-    font-size: 150%;
-    padding: 30px 20px;
-    border:3px solid black;
-    border-radius: 10px;
-    text-align: center;
+table {
+  width: 80%;
+  margin: auto;
+  margin-top: 100px;
+  margin-bottom: 100px;
+  font-size: 150%;
+  padding: 30px 20px;
+  border:3px solid black;
+  border-radius: 10px;
+  text-align: center;
+  border-radius:10px;
 }
 
 .newquiz{
@@ -33,12 +33,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   box-shadow:4px 5px grey;
   
 }
-.newquiz a{
-  text-decoration:none;
-  font-size:large;
-  color:black;
-  font-weight:bold;
-}
+
 label{
   width:50%;
   margin-right:120px;
@@ -72,3 +67,5 @@ label{
       font-size: 21px;
       cursor: pointer;
   }
+ 
+

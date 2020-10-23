@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `quiz`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `quiz` (
-  `quiz_Id` int NOT NULL,
+  `quiz_Id` int auto_increment,
   `quiz_name` varchar(45) NOT NULL,
   PRIMARY KEY (`quiz_Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
