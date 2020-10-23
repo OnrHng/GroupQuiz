@@ -36,7 +36,7 @@ function escapeHtml(unsafe) {
 app.post('/saveQuizName', (req, res) => {
   connection.query("INSERT INTO quiz (quiz_name) values (?)", escapeHtml(req.body.quizName), 
     (err, result) => {
-        if(err) throw rej(err);
+        if(err) throw err;
         console.log("created a new quiz name with id ", result.insertId);
         res.json({id: result.insertId});
     }
@@ -49,12 +49,22 @@ app.post('/postQuestions', (req, res) => {
   [req.body.quiz_Id, req.body.question, req.body.option1, req.body.option2,
   req.body.option3, req.body.option4, req.body.correctAnswer], 
     (err, result) => {
-        if(err) throw rej(err);
+        if(err) throw err;
         console.log("created a new question created with id ", result.insertId);
         res.json({id: result.insertId});
     }
   );
 
+});
+
+// select all quizes
+app.get("/quiz", (req, res) => {
+  connection.query('SELECT * FROM quiz', (err, rows) => {
+      if(err) throw err;
+      console.log('Data received from Db:');
+      console.log(rows);
+      res.json(rows);
+  });
 });
 
 // http://localhost:3000
