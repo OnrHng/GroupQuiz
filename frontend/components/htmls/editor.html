@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="assets/favicon.png"> 
+  <link rel="icon" type="image/png" href="../../assets/favicon.png"> 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <link rel="stylesheet" href="../styles/editor.css">
   
@@ -17,13 +17,13 @@
       <div class="quiz-title-container">
         <label for="" id="quizTitle">Quiz Title</label>
         <input type="text" name="quizName" id="quizName" placeholder="Type Quiz Name" required>
-        <button type="submit" id="quizTitleButton">Save Quiz Name</button>
+        <button type="submit" id="quizTitleButton">SAVE</button>
       </div>
     </form>
     <form id="formQuestion">
     <!-- Questions -->
     <div class="question-container" id="questionTemplate">
-      <fieldset style="margin-top: 10px;">
+      <fieldset style="margin-top: 8px;">
         <legend>Define Question</legend>
         <label for="question">Question</label>
         <input type="text" name="question" id="question" placeholder="Type Question" required>
@@ -57,12 +57,12 @@
         <input type="submit" value="NEXT" id="nextButton">
       </div>
     </div>
-  </form>
-  <p id="questionNumber"></p>
+    </form>
+    <p id="questionNumber"></p>
 
-  <div class="submitQuiz">
-    <input type="button" value="Submit Quiz" id="submitQuizButton">
-  </div>
+    <div class="submitQuiz">
+      <input type="button" value="Submit Quiz" id="submitQuizButton">
+    </div>
   </div>
   <!-- Script -->
   <script src="../scripts/editor.js"></script>
