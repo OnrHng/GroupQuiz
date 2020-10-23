@@ -57,6 +57,16 @@ app.post('/postQuestions', (req, res) => {
 
 });
 
+// select all quizes
+app.get("/quiz", (req, res) => {
+  connection.query('SELECT * FROM quiz', (err, rows) => {
+      if(err) throw err;
+      console.log('Data received from Db:');
+      console.log(rows);
+      res.json(rows);
+  });
+});
+
 // http://localhost:3000
 const PORT = 3000;
 app.listen(PORT, () => {
