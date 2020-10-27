@@ -4,29 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Quiz</title>
+  <link rel="icon" type="image/png" href="../../assets/favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../styles/quiz.css">
-  </head>
+</head>
     <body>
-      <h1>Quiz Management</h1>
-      <div class="quiz">
-
-        <label>Quiz1</label> 
-        <button id onclick="edit()">Edit</button>  <button onclick="delete()">delete</button>
-        <button class="btn"><i class="fa fa-play"></i></button> 
-  
-        </div>
-<div class="quiz">
-  <label > Quiz2</label> 
-        <button id onclick="edit()">Edit</button> <button onclick="delete()">delete</button>
-        <button class="btn"><i class="fa fa-play"></i></button> 
-</div>
+      <div class="quiz-container">
+        <h1>Quiz Overview</h1>
+        <table > 
+            <tr>
+              <th>Quiz Name</th>
+            </tr>
+            <tbody id = "tbody"></tbody>
+        </table>
+      </div>
+    
     <div class="newquiz">
-      <button onclick='window.location.href = "editor.html"' > NEW QUIZ
-        <!-- <a href="editor.html">New Quiz</a></div> -->
-    </button>
-    </body>
+      <button id="newquizz" onclick='window.location.href = "editor.html"' > NEW QUIZ</button>
+    </div>
+    <script src="../scripts/quiz.js"></script>
+</body>
 
-    </html>
+</html>
     
   
