@@ -4,41 +4,59 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Quiz</title>
+  <link rel="icon" type="image/png" href="../../assets/favicon.png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="../styles/quiz.css">
-  <link rel="icon" type="image/png" href="../../assets/favicon.png">
-  </head>
+</head>
     <body>
-      <h1>Quiz Overview</h1>
-      <!--<div class="quiz">
-
-        <label>Quiz1</label> 
-        <button id onclick="edit()">Edit</button>  <button onclick="delete()">delete</button>
-        <button class="btn"><i class="fa fa-play"></i></button> 
-  
-        </div>
-<div class="quiz">
-  <label > Quiz2</label> 
-        <button id onclick="edit()">Edit</button> <button onclick="delete()">delete</button>
-        <button class="btn"><i class="fa fa-play"></i></button> -->
-
+      <div class="quiz-container">
+        <h1>Quiz Overview</h1>
         <table > 
-          <tr>
+            <tr>
+              <th>Quiz Name</th>
+            </tr>
+            <tbody id = "tbody"></tbody>
+        </table>
+      </div>
     
-            <th>Quiz Name</th>
-            
-          </tr>
-          <tbody id = "tbody"></tbody>
-      </table>
-    
-</div>
     <div class="newquiz">
-      <button id="newquizz" onclick='window.location.href = "editor.html"' > NEW QUIZ
-        <!-- <a href="editor.html">New Quiz</a></div> -->
-    </button>
+      <button id="newquizz" onclick='window.location.href = "editor.html"' > NEW QUIZ</button>
+    </div>
     <script src="../scripts/quiz.js"></script>
-    </body>
+    <!-- delete quiz --> 
+<script>
 
-    </html>
+    Object.prototype.removeDB = function(){
+        var parent=this.parentElement;
+	      var parent2=parent.parentElement;
+        var firstChild=parent2.firstElementChild;
+        var quiz=firstChild.textContent;
+        var url = new URL('http://localhost:3000/removeDB/'+ quiz)
+        fetch(url,
+            {
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                method: "Delete",
+                body: JSON.stringify({quiz:quiz})
+            })
+            .then(response => response.json())
+            .then(function(data) {
+                var resultP = document.getElementById('result');
+                resultP.innerText = "quiz " + data.quiz + " was successfully delete from database!";
+            });
+    }
+    var del = document.querySelectorAll('.del');
+
+    for (var i = 0, len = del.length; i < len; i++) {
+        del[i].addEventListener('click',removeDB,false);
+    }
+
+</script>
+
+</body>
+
+</html>
     
   

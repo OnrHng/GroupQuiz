@@ -16,7 +16,7 @@ var url = new URL('http://localhost:3000/quiz')
 
             cell2.innerText = item.quiz_name; 
             cell3.innerHTML = '<button class="button" value="Edit"  onClick="edit(this)">Edit</button>'; 
-            cell4.innerHTML = '<button class="button" value="Delete"  onClick="delete(this">Delete</button>'; 
+            cell4.innerHTML = '<button class="button del" value="Delete" >Delete</button>'; 
             cell5.innerHTML = '<button class="button" id="'+item.quiz_Id+'" onClick="addLikes(this)">'+'<i class="fa fa-play">'+'</i>'+'</button> ';
             
         }

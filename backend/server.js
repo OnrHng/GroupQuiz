@@ -66,6 +66,20 @@ app.get("/quiz", (req, res) => {
       res.json(rows);
   });
 });
+// delete one quiz
+app.delete("/removeDB/:quiz", (req, res) => {
+  connection.query("delete from quiz where quiz_name= ?" ,req.params.quiz,
+      (err, result) => {
+          if(err) throw err;
+          console.log("affected rows: ", result.affectedRows);
+          if (result.affectedRows == 0) {
+              res.sendStatus(404);
+          } else {
+              res.json({"delete": result.affectedRows});
+          }
+      }
+  );
+});
 
 // http://localhost:3000
 const PORT = 3000;
