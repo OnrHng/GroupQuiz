@@ -58,7 +58,7 @@ const questionTemplate = `
       <div class="answers-wraper">
         <div class="answer">
           <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-          <input type="radio" name="correct" id="correctA" checked>
+          <input type="radio" name="correct" id="correctA">
         </div>
         <div class="answer">
           <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
@@ -118,7 +118,7 @@ async function postQuestions(event) {
       
         // increment question number and display it
         questionNumber++;
-        document.getElementById('questionNumber').textContent = questionNumber + " Questions ADDED!";
+        document.getElementById('questionNumber').textContent = questionNumber + " Question ADDED!";
   
       } else {
         console.log('eroor');
