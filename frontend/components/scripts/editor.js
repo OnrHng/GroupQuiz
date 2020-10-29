@@ -83,7 +83,7 @@ const questionTemplate = `
 
 // click Submit Button 
 function submitQuiz(event) {
-  window.location.href = "../htmls/quiz.html"
+  window.location.href = "../htmls/quiz.html";
 }
 
 // post Questions
