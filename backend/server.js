@@ -66,6 +66,15 @@ app.get("/quiz", (req, res) => {
       res.json(rows);
   });
 });
+// select all questiones
+app.get("/questiones/:quizNameId", (req, res) => {
+  connection.query('select questions.quiz_Id, quiz_name, question, option1, option2, option3, option4, correctAnswer from quiz_game.questions left join quiz on questions.quiz_Id=quiz.quiz_Id where quiz.quiz_Id=? ',req.params.quizNamId, (err, rows) => {
+      if(err) throw err;
+      console.log('Data received from Db:');
+      console.log(rows);
+      res.json(rows);
+  });
+});
 // delete one quiz
 app.delete("/removeDB/:quiz", (req, res) => {
   connection.query("delete from quiz where quiz_name= ?" ,req.params.quiz,
