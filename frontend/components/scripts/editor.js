@@ -5,6 +5,7 @@ const nextButton = document.getElementById('nextButton');
 const qiuzTitleForm = document.getElementById('formQuizTitle');
 const questionTemplateDiv = document.getElementById('questionTemplate');
 const quizTitleButton = document.getElementById('quizTitleButton');
+const questionContainer = document.getElementById("quetion-cosntainer");
 
 // data for create new Quiz
 const quizName = document.getElementById('quizName');
@@ -38,9 +39,21 @@ function getCorrectAnswer() {
   } 
 }
 
+var radiaBtnCount = 1;
 // click next Button
 function displayNextQuestion() {
-  // get here question template
+  newQuestionDiv = document.createElement("div");
+  newQuestionDiv.innerHTML = questionTemplate
+  newQuestionDiv.className = "questionContainer";
+
+  // induvidual names for radio buttons
+  newQuestionDiv.getElementsByTagName("input")[2].name = "correct" + radiaBtnCount;
+  newQuestionDiv.getElementsByTagName("input")[4].name = "correct" + radiaBtnCount; 
+  newQuestionDiv.getElementsByTagName("input")[6].name = "correct" + radiaBtnCount; 
+  newQuestionDiv.getElementsByTagName("input")[8].name = "correct" + radiaBtnCount; 
+  radiaBtnCount++;
+
+  questionContainer.append(newQuestionDiv);
 }
 
 // define question template to add new question
@@ -48,7 +61,7 @@ const questionTemplate = `
   <fieldset style="margin-top: 10px;">
     <legend>Define Question</legend>
     <label for="question">Question</label>
-    <input type="text" name="question" id="question" placeholder="Type Question" required>
+    <input type="text" name="question" placeholder="Type Question" required>
     <!-- Answers -->
     <div class="answers-container">
       <div class="answers-title">
@@ -57,33 +70,49 @@ const questionTemplate = `
       </div>
       <div class="answers-wraper">
         <div class="answer">
-          <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-          <input type="radio" name="correct" id="correctA" checked>
+          <input type="text" name="A" placeholder="Type Answer A" required>
+          <input type="radio" name="correct" checked>
         </div>
         <div class="answer">
-          <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
-          <input type="radio" name="correct" id="correctB">
+          <input type="text" name="B" placeholder="Type Answer B" required>
+          <input type="radio" name="correct">
         </div>
         <div class="answer">
-          <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
-          <input type="radio" name="correct" id="correctC">
+          <input type="text" name="A" placeholder="Type Answer C" required>
+          <input type="radio" name="correct">
         </div>
         <div class="answer">
-          <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
-          <input type="radio" name="correct" id="correctD">
+          <input type="text" name="A" placeholder="Type Answer D" required>
+          <input type="radio" name="correct">
         </div>
       </div>
     </div>
   </fieldset>
-  <div class="nextQuestion">
-  <input type="submit" value="NEXT" id="nextButton">
-  </div>
-
     `;
 
 // click Submit Button 
 function submitQuiz(event) {
+  var questionContainerArray = document.getElementsByClassName("questionContainer");
+  var quizTitle = document.getElementById("quizName").value;
+  var questionData = {};
+  
+  // parse each question
+  for (var i in questionContainerArray) {
+    // var question =
+    // var a =
+    // var b =
+    // var c =
+    // var d =
+    // var correctAnswer =
+
+
+  // fetch
+
+
+  }
+
   window.location.href = "../htmls/quiz.html";
+  
 }
 
 // post Questions
