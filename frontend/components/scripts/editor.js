@@ -1,11 +1,9 @@
 // DOM 
 const submitQuizButton = document.getElementById('submitQuizButton');
 const questionFrom = document.getElementById('formQuestion');
-const nextButton = document.getElementById('nextButton');
+const addButton = document.getElementById('addButton');
 const qiuzTitleForm = document.getElementById('formQuizTitle');
 const questionTemplateDiv = document.getElementById('questionTemplate');
-const quizTitleButton = document.getElementById('quizTitleButton');
-
 // data for create new Quiz
 const quizName = document.getElementById('quizName');
 const question = document.getElementById('question');
@@ -41,45 +39,31 @@ function getCorrectAnswer() {
 // click next Button
 function displayNextQuestion() {
   // get here question template
+  var quizNameId=13;
+  var url = new URL('http://localhost:3000/questiones/'+ quizNameId)
+    
+    fetch(url)
+    .then(response => response.json())
+    .then(function(data) {
+        var tbody = document.getElementById('tbody');
+        tbody.innerHTML = "";
+        var count=0;
+        for (var item of data) {
+          if(item.length>0 && count==0){
+            var row=tbody.insertRow();
+            var cell3 = row.insertCell(); 
+            cell3.innerHTML='<form id="formQuizTitle"><div class="quiz-title-container"><label for="" id="quizTitle">Quiz Title</label><input type="text" name="quizName" id="quizName" value='+item.quiz_name+'></div> </form>'
+          count++;
+          }
+            var row = tbody.insertRow();
+            var cell3 = row.insertCell();
+            cell3.innerHTML = '<fieldset style="margin-top: 10px;"><legend>Define Question</legend><label for="question">Question</label><input type="text" name="question" id="question" value='+ item.question+'><!-- Answers --><div class="answers-container"><div class="answers-title"><div class="answersTitle"><h3>Answers</h3></div><div class="correctTitle"><h3>Correct</h3></div></div><div class="answers-wraper"><div class="answer"><input type="text" name="A" id="answerA" value='+ item.option1+'><input type="radio" name="correct" id="correctA" checked></div><div class="answer"><input type="text" name="B" id="answerB" value='+ item.option2+'><input type="radio" name="correct" id="correctB"></div><div class="answer"><input type="text" name="A" id="answerC" value='+ item.option3+'><input type="radio" name="correct" id="correctC"></div><div class="answer"><input type="text" name="A" id="answerD" value='+ item.option4+'><input type="radio" name="correct" id="correctD"></div></div></div></fieldset>';            
+        }
+        });
+
 }
+ 
 
-// define question template to add new question
-const questionTemplate = `
-  <fieldset style="margin-top: 10px;">
-    <legend>Define Question</legend>
-    <label for="question">Question</label>
-    <input type="text" name="question" id="question" placeholder="Type Question" required>
-    <!-- Answers -->
-    <div class="answers-container">
-      <div class="answers-title">
-        <div class="answersTitle"><h3>Answers</h3></div>
-        <div class="correctTitle"><h3>Correct</h3></div>
-      </div>
-      <div class="answers-wraper">
-        <div class="answer">
-          <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-          <input type="radio" name="correct" id="correctA" checked>
-        </div>
-        <div class="answer">
-          <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
-          <input type="radio" name="correct" id="correctB">
-        </div>
-        <div class="answer">
-          <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
-          <input type="radio" name="correct" id="correctC">
-        </div>
-        <div class="answer">
-          <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
-          <input type="radio" name="correct" id="correctD">
-        </div>
-      </div>
-    </div>
-  </fieldset>
-  <div class="nextQuestion">
-  <input type="submit" value="NEXT" id="nextButton">
-  </div>
-
-    `;
 
 // click Submit Button 
 function submitQuiz(event) {
@@ -92,7 +76,8 @@ async function postQuestions(event) {
   getCorrectAnswer();
   
   // if the quiz name is not saved show the message!!
-  if(quizTitleButton.disabled) {
+ //if(addButton.disabled) {
+    saveQuizName(event);
     fetch("/postQuestions", {
       headers: {
         'Accept': 'application/json',
@@ -100,9 +85,9 @@ async function postQuestions(event) {
       },
       method: "POST",
       body: JSON.stringify({
-        quiz_Id: quizNameId,
+        quiz_Id: 13,
         question: question.value,
-        option1: answerA.value,
+        option1:  answerA.value,
         option2 : answerB.value,
         option3 : answerC.value,
         option4 : answerD.value,
@@ -115,18 +100,19 @@ async function postQuestions(event) {
         // new question template HERE
         questionTemplateDiv.innerHTML = '';
         questionTemplateDiv.innerHTML = questionTemplate;
-      
+      displayNextQuestion();
         // increment question number and display it
         questionNumber++;
         document.getElementById('questionNumber').textContent = questionNumber + " Questions ADDED!";
   
       } else {
-        console.log('eroor');
+        console.log('error');
       }
     });
-  }else {
+  //}
+  /*else {
     alert('Please Save Quiz Name!!!');
-  }
+  }*/
 
 }
 
@@ -152,9 +138,8 @@ async function saveQuizName(event){
         console.log('quiz is posted! and quiz number is ' + quiz.id);
         quizNameId = quiz.id;
         // save button should be disable
-        document.getElementById('quizTitleButton').disabled = true;
-        document.getElementById('quizTitleButton').classList.add('disabled');
-
+        
+console.log("ok");
       } else {
         console.log('eroor');
       }
@@ -163,6 +148,6 @@ async function saveQuizName(event){
 }
 
 // EvenListener
-qiuzTitleForm.addEventListener('submit', saveQuizName);
-questionFrom.addEventListener('submit', postQuestions);
+addButton.addEventListener('click', postQuestions);
+//questionFrom.addEventListener('submit', postQuestions);
 submitQuizButton.addEventListener('click', submitQuiz);

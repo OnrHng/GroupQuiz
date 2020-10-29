@@ -1,0 +1,9 @@
+select questions.quiz_Id, quiz_name, question, option1, option2, option3, option4, correctAnswer from quiz_game.questions
+left join quiz
+on questions.quiz_Id=quiz.quiz_Id
+
+===================================================================================
+select questions.quiz_Id, quiz_name, question, option1, option2, option3, option4, correctAnswer from quiz_game.questions
+left join quiz
+on questions.quiz_Id=quiz.quiz_Id
+where quiz_name="AGe"

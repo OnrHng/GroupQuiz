@@ -21,6 +21,7 @@ h1 {
 }
 
 .editor-container {
+  overflow:scroll;
   width: 480px;
   height: 630px;
   background: rgba(255, 255, 255, 0.8);

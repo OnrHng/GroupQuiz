@@ -13,57 +13,61 @@
   <div class="editor-container">
     <!-- Question Title -->
     <h1>Quiz Editor</h1>
-    <form id="formQuizTitle">
-      <div class="quiz-title-container">
-        <label for="" id="quizTitle">Quiz Title</label>
-        <input type="text" name="quizName" id="quizName" placeholder="Type Quiz Name" required>
-        <button type="submit" id="quizTitleButton">SAVE</button>
-      </div>
-    </form>
-    <form id="formQuestion">
-    <!-- Questions -->
-    <div class="question-container" id="questionTemplate">
-      <fieldset style="margin-top: 8px;">
-        <legend>Define Question</legend>
-        <label for="question">Question</label>
-        <input type="text" name="question" id="question" placeholder="Type Question" required>
-        <!-- Answers -->
-        <div class="answers-container">
-          <div class="answers-title">
-            <div class="answersTitle"><h3>Answers</h3></div>
-            <div class="correctTitle"><h3>Correct</h3></div>
+    <table > 
+      <tr>
+        <th>Quiz Name</th>
+      </tr>
+      <tbody id = "tbody"></tbody>
+  </table>
+  <form id="formQuizTitle">
+    <div class="quiz-title-container">
+      <label for="" id="quizTitle">Quiz Title</label>
+      <input type="text" name="quizName" id="quizName" placeholder="Type Quiz Name" required>
+    </div>
+  </form>
+  <form id="formQuestion">
+  <div class="question-container" id="questionTemplate">
+    <fieldset style="margin-top: 8px;">
+      <legend>Define Question</legend>
+      <label for="question">Question</label>
+      <input type="text" name="question" id="question" placeholder="Type Question" required>
+       Answers 
+      <div class="answers-container">
+        <div class="answers-title">
+          <div class="answersTitle"><h3>Answers</h3></div>
+          <div class="correctTitle"><h3>Correct</h3></div>
+        </div>
+        <div class="answers-wraper">
+          <div class="answer">
+            <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
+            <input type="radio" name="correct" id="correctA" checked>
           </div>
-          <div class="answers-wraper">
-            <div class="answer">
-              <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-              <input type="radio" name="correct" id="correctA" checked>
-            </div>
-            <div class="answer">
-              <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
-              <input type="radio" name="correct" id="correctB">
-            </div>
-            <div class="answer">
-              <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
-              <input type="radio" name="correct" id="correctC">
-            </div>
-            <div class="answer">
-              <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
-              <input type="radio" name="correct" id="correctD">
-            </div>
+          <div class="answer">
+            <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
+            <input type="radio" name="correct" id="correctB">
+          </div>
+          <div class="answer">
+            <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
+            <input type="radio" name="correct" id="correctC">
+          </div>
+          <div class="answer">
+            <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
+            <input type="radio" name="correct" id="correctD">
           </div>
         </div>
-      </fieldset>
-      <div class="nextQuestion">
-        <input type="submit" value="NEXT" id="nextButton">
       </div>
-    </div>
-    </form>
-    <p id="questionNumber"></p>
-
-    <div class="submitQuiz">
-      <input type="button" value="Submit Quiz" id="submitQuizButton">
+    </fieldset>
+    <div class="addQuestion">
+      <input type="submit" value="Add" id="addButton">
     </div>
   </div>
+  </form>
+  <p id="questionNumber"></p>
+
+  <div class="submitQuiz">
+    <input type="button" value="Submit Quiz" id="submitQuizButton">
+  </div>
+</div>
   <!-- Script -->
   <script src="../scripts/editor.js"></script>
 </body>
