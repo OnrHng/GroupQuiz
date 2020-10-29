@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const mysql = require("mysql");
 const dbconfig = require("./configDb.js");
-
+const praticipationCode = require("./components/quizCode.js");
 
 // parse HTTP POST Data 
 const bodyParser = require('body-parser');
@@ -66,6 +66,17 @@ app.get("/quiz", (req, res) => {
       res.json(rows);
   });
 });
+
+//
+
+// generate Code and send the code to frontend
+app.get('/quizStart', function(req, res) {
+  res.json(praticipationCode);
+});
+
+
+// get student name frontendt and send it to quiz start html
+
 
 // http://localhost:3000
 const PORT = 3000;
