@@ -4,6 +4,7 @@ const app = express();
 const mysql = require("mysql");
 const dbconfig = require("./configDb.js");
 const praticipationCode = require("./components/quizCode.js");
+let studentsNames = '';
 
 // parse HTTP POST Data 
 const bodyParser = require('body-parser');
@@ -67,15 +68,18 @@ app.get("/quiz", (req, res) => {
   });
 });
 
-//
-
 // generate Code and send the code to frontend
 app.get('/quizStart', function(req, res) {
-  res.json(praticipationCode);
+  res.json(
+    {praticipationCode, studentsNames
+  });
 });
 
-
-// get student name frontendt and send it to quiz start html
+// get student name frontend and send it to quiz start html´
+app.post("/getParticipantName", function(req, res){
+  studentsNames = studentsNames + " " + req.body.participationName;
+  res.sendStatus(200);
+});
 
 
 // http://localhost:3000
