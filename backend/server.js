@@ -46,7 +46,7 @@ app.post('/submitQuizName', (req, res) => {
 // Post Questions on DB
 app.post('/postQuestions', (req, res) => {
   connection.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)",
-    [req.body.quiz_Id, req.body.question, req.body.option1, req.body.option2,
+    [req.body.quizId, req.body.question, req.body.option1, req.body.option2,
     req.body.option3, req.body.option4, req.body.correctAnswer],
     (err, result) => {
       if (err) throw err;
