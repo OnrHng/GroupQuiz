@@ -10,19 +10,19 @@
   <title>Editor</title>
 </head>
 <body>
-  <div class="editor-container">
+  <div class="editor-container" id="editor-container">
+    <div class="quetion-cosntainer" id="quetion-cosntainer">
     <!-- Question Title -->
     <h1>Quiz Editor</h1>
     <form id="formQuizTitle">
       <div class="quiz-title-container">
         <label for="" id="quizTitle">Quiz Title</label>
         <input type="text" name="quizName" id="quizName" placeholder="Type Quiz Name" required>
-        <button type="submit" id="quizTitleButton">SAVE</button>
       </div>
     </form>
     <form id="formQuestion">
     <!-- Questions -->
-    <div class="question-container" id="questionTemplate">
+    <div class="questionContainer" id="questionContainer">
       <fieldset style="margin-top: 8px;">
         <legend>Define Question</legend>
         <label for="question">Question</label>
@@ -36,32 +36,35 @@
           <div class="answers-wraper">
             <div class="answer">
               <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-              <input type="radio" name="correct" id="correctA" checked>
+              <input type="radio" name="correct0" id="correctA" checked>
             </div>
             <div class="answer">
               <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
-              <input type="radio" name="correct" id="correctB">
+              <input type="radio" name="correct0" id="correctB">
             </div>
             <div class="answer">
               <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
-              <input type="radio" name="correct" id="correctC">
+              <input type="radio" name="correct0" id="correctC">
             </div>
             <div class="answer">
               <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
-              <input type="radio" name="correct" id="correctD">
+              <input type="radio" name="correct0" id="correctD">
             </div>
           </div>
         </div>
       </fieldset>
-      <div class="nextQuestion">
-        <input type="submit" value="NEXT" id="nextButton">
-      </div>
+     
     </div>
     </form>
+    </div>
+   
     <p id="questionNumber"></p>
-
+    <div class="nextQuestion">
+      <input type="submit" value="Add" id="nextButton" onclick="displayNextQuestion()">
+    </div>
     <div class="submitQuiz">
-      <input type="button" value="Submit Quiz" id="submitQuizButton">
+      <input type="button" value="Cancel" id="submitQuizButton" onclick="submitQuiz()">
+      <input type="button" value="Save" id="submitQuizButton" onclick="submitQuiz()">
     </div>
   </div>
   <!-- Script -->
