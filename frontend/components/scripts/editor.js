@@ -1,5 +1,3 @@
-const test = require("custom-confirm");
-
 // DOM 
 const submitQuizButton = document.getElementById('submitQuizButton');
 const questionFrom = document.getElementById('formQuestion');

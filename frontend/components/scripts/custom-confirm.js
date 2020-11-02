@@ -108,7 +108,7 @@
 
     function getFinalConfig(config) {
         var _defaults = {
-            title: 'Cancel',
+            title: 'Cancel?',
             body: 'Are you sure you do not want to save the quiz?',
             btn_yes: 'Yes',
             btn_no: 'No',
