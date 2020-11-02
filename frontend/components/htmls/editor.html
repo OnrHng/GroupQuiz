@@ -20,7 +20,7 @@
         <input type="text" name="quizName" id="quizName" placeholder="Type Quiz Name" required>
       </div>
     </form>
-    <form id="formQuestion">
+    <form id="formQuestion" action="javascript:displayNextQuestion();">
     <!-- Questions -->
     <div class="questionContainer" id="questionContainer">
       <fieldset style="margin-top: 8px;">
@@ -54,15 +54,16 @@
         </div>
       </fieldset>
     </div>
-    </form>
+    
     </div>
     <p id="questionNumber"></p>
     <div class="nextQuestion">
-      <input type="submit" value="Add" id="nextButton" onclick="displayNextQuestion()">
+      <input type="submit" value="Add" id="nextButton">
     </div>
+    </form>
     <div class="submitQuiz">
       <input type="button" value="Cancel" id="cancelButton">
-      <input type="button" value="Save" id="submitQuizButton" onclick="submitQuiz()">
+      <input type="submit" value="Save" id="submitQuizButton">
     </div>
   </div>
 

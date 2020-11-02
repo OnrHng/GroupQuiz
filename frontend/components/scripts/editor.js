@@ -53,7 +53,8 @@ function displayNextQuestion() {
   newQuestionDiv.getElementsByTagName("input")[8].name = "correct" + radioBtnCount; 
   radioBtnCount++;
 
-  questionContainer.append(newQuestionDiv);
+  // questionContainer.append(newQuestionDiv);
+  document.getElementById("formQuestion").append(newQuestionDiv);
 };
 
 // define question template to add new question
@@ -92,11 +93,10 @@ const questionTemplate = `
 
 // click Submit Button 
 var quizId = 0;
-function submitQuiz(event) {
+function submitQuiz() {
   var questionContainerArray = document.getElementsByClassName("questionContainer");
   var quizName = document.getElementById("quizName").value;
-  var questionData = {};
-  
+
   // get questionId
   fetch("/submitQuizName", {
   headers: {
@@ -160,7 +160,7 @@ function submitQuiz(event) {
       })
       }
     ).then(function(response) {
-      console("hey")
+      console("test")
     });
 
 
@@ -171,6 +171,6 @@ function submitQuiz(event) {
 })};
 
 // EvenListener
-// qiuzTitleForm.addEventListener('submit', saveQuizName);
+document.getElementById("submitQuizButton").addEventListener('click', function () {document.getElementById("formQuizTitle").submit()});
 // questionFrom.addEventListener('submit', postQuestions);
 // submitQuizButton.addEventListener('click', submitQuiz);
