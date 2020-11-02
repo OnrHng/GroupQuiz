@@ -5,6 +5,7 @@ const mysql = require("mysql");
 const dbconfig = require("./configDb.js");
 const praticipationCode = require("./components/quizCode.js");
 let studentsNames = '';
+// const WebSocket = require('ws');
 
 // parse HTTP POST Data 
 const bodyParser = require('body-parser');
@@ -87,3 +88,81 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });
+
+
+/*
+
+const wss = new WebSocket.Server({ server : httpServer });
+wss.on('connection', function connection(ws) {
+  newUser(ws);
+
+  // send back chat history when new user come
+  if (chatHistory.length > 0) {
+    ws.send(JSON.stringify({type: 'chatHistory', data: chatHistory}));
+  }
+
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+
+    var jsonObj = JSON.parse(message);
+    if (jsonObj.eventType == 'sendGroupChat') {
+      jsonObj.data.name = users[jsonObj.data.userId].name;
+
+      //increases the number of messages sent by the user when sending a message
+      users[jsonObj.data.userId].amountMsg++ ;
+
+      // add chat text into chatHistory, if the msg start not '/'
+      if (!jsonObj.data.msg.startsWith("/")){
+        var text = {
+          time: new Date().toLocaleTimeString(),
+          msg: jsonObj.data.msg,
+          userId: jsonObj.data.userId,
+          name: jsonObj.data.name
+        };
+        chatHistory.push(text);
+      }
+
+      //reflection exercise 1 - Smilies
+      if (jsonObj.data.msg.startsWith(":") || jsonObj.data.msg.startsWith(";")) {
+        if (jsonObj.data.msg === ":)") {
+          jsonObj.data.msg = "&#128578"; // smiley face
+        } else if (jsonObj.data.msg === ":(") {
+          jsonObj.data.msg = "&#128577";// upset
+        } else if (jsonObj.data.msg === ":D") {
+          jsonObj.data.msg = "&#128515"; //SMILING FACE WITH OPEN MOUTH
+        } else if (jsonObj.data.msg === ";)") {
+          jsonObj.data.msg = "&#128521"; //WINKING FACE
+        } else if (jsonObj.data.msg === ";p") {
+          jsonObj.data.msg = "&#128540"; //FACE WITH STUCK-OUT TONGUE AND WINKING EYE
+        }
+      }
+
+      sendToAllClients(JSON.stringify(jsonObj)); // broadcast
+
+    } else if (jsonObj.eventType == 'draw') {
+      sendToAllClients(message); // broadcast
+    }
+    else if (jsonObj.eventType == 'setName') {
+      console.log("set name of user id + " + jsonObj.data.userId +
+      " from " + users[jsonObj.data.userId].name + " to " + jsonObj.data.name);
+      users[jsonObj.data.userId].name = jsonObj.data.name;
+
+    }else if (jsonObj.eventType == 'textDraw') {
+      sendToAllClients(message); // broadcast
+    }else if (jsonObj.eventType == 'smiley'){
+      sendToAllClients(message);
+    }
+    // todo other messages
+
+  });
+  ws.on('close', function close(number, reason) {
+    console.log('close, number: ' + number + " reason: " + reason);
+  });
+});
+
+function sendToAllClients(msg) {
+  wss.clients.forEach(function(client) {
+      client.send(msg);
+  });
+}
+*/
