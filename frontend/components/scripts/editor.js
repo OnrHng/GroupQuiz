@@ -1,3 +1,5 @@
+const test = require("custom-confirm");
+
 // DOM 
 const submitQuizButton = document.getElementById('submitQuizButton');
 const questionFrom = document.getElementById('formQuestion');
@@ -115,7 +117,6 @@ function submitQuiz(event) {
   .then(function() {
   
 
-
   // parse each question
   for (var i of questionContainerArray) {
     var inputArray = i.getElementsByTagName("input");
@@ -143,16 +144,7 @@ function submitQuiz(event) {
       correctAnswer = "d"
     }
 
-    console.log(question);
-    console.log(a);
-    console.log(b);
-    console.log(c);
-    console.log(d);
-    console.log(correctAnswer);
-    
-
-
- 
+    // fetch each question
     fetch("/postQuestions", {
       headers: {
         'Accept': 'application/json',
@@ -179,85 +171,6 @@ function submitQuiz(event) {
   window.location.href = "../htmls/quiz.html";
   
 })};
-
-function cancel() {
-  window.location.href = "../htmls/quiz.html";
-}
-// post Questions
-// async function postQuestions(event) {
-//   event.preventDefault();
-//   getCorrectAnswer();
-  
-//   // if the quiz name is not saved show the message!!
-//   if(quizTitleButton.disabled) {
-//     fetch("/postQuestions", {
-//       headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json'
-//       },
-//       method: "POST",
-//       body: JSON.stringify({
-//         quiz_Id: quizNameId,
-//         question: question.value,
-//         option1: answerA.value,
-//         option2 : answerB.value,
-//         option3 : answerC.value,
-//         option4 : answerD.value,
-//         correctAnswer: correctAnswer
-//       })
-//       }
-//     ).then(function(response) {
-//       if(response.ok){
-//         console.log('question is posted!')
-//         // new question template HERE
-//         questionTemplateDiv.innerHTML = '';
-//         questionTemplateDiv.innerHTML = questionTemplate;
-      
-//         // increment question number and display it
-//         questionNumber++;
-//         document.getElementById('questionNumber').textContent = questionNumber + " Questions ADDED!";
-  
-//       } else {
-//         console.log('eroor');
-//       }
-//     });
-//   }else {
-//     alert('Please Save Quiz Name!!!');
-//   }
-
-// }
-
-// ASYNC FUNC SHOULD BE
-// save quiz name
-// async function saveQuizName(event){
-//   event.preventDefault();
-//   console.log('save quiz name clicked');
-
-//   fetch("/saveQuizName", {
-//     headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json'
-//     },
-//     method: "POST",
-//     body: JSON.stringify({
-//         quizName : quizName.value
-//       })})
-//     .then(async function(response) {
-//       if(response.ok){
-//         var quiz =await response.json();
-//         console.log(quiz);
-//         console.log('quiz is posted! and quiz number is ' + quiz.id);
-//         quizNameId = quiz.id;
-//         // save button should be disable
-//         document.getElementById('quizTitleButton').disabled = true;
-//         document.getElementById('quizTitleButton').classList.add('disabled');
-
-//       } else {
-//         console.log('eroor');
-//       }
-//   });
-
-// }
 
 // EvenListener
 // qiuzTitleForm.addEventListener('submit', saveQuizName);
