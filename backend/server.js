@@ -4,8 +4,9 @@ const app = express();
 const mysql = require("mysql");
 const dbconfig = require("./configDb.js");
 const praticipationCode = require("./components/quizCode.js");
+const WebSocket = require('ws');
+
 let studentsNames = '';
-// const WebSocket = require('ws');
 
 // parse HTTP POST Data 
 const bodyParser = require('body-parser');
@@ -24,6 +25,16 @@ connection.connect((err) => {
     console.log('Connection established!');
   }
 });
+
+// Running Server on PORT
+const PORT = 3000;
+var httpServer = app.listen(PORT, () => {
+  console.log(`HTTP server listening at http://localhost:${PORT}`);
+});
+
+// Websocket server
+const wss = new WebSocket.Server({ server : httpServer });
+
 
 function escapeHtml(unsafe) {
   return unsafe
@@ -50,6 +61,7 @@ app.post('/postQuestions', (req, res) => {
   connection.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)",
     [req.body.quizId, req.body.question, req.body.option1, req.body.option2,
     req.body.option3, req.body.option4, req.body.correctAnswer],
+
     (err, result) => {
       if (err) throw err;
       console.log("created a new question created with id ", result.insertId);
@@ -62,107 +74,43 @@ app.post('/postQuestions', (req, res) => {
 // select all quizes
 app.get("/quiz", (req, res) => {
   connection.query('SELECT * FROM quiz', (err, rows) => {
-    if (err) throw err;
-    console.log('Data received from Db:');
-    console.log(rows);
-    res.json(rows);
+      if(err) throw err;
+      res.json(rows);
   });
 });
 
 // generate Code and send the code to frontend
 app.get('/quizStart', function(req, res) {
-  res.json(
-    {praticipationCode, studentsNames
-  });
+  res.json({praticipationCode});
 });
 
-// get student name frontend and send it to quiz start html´
-app.post("/getParticipantName", function(req, res){
-  studentsNames = studentsNames + " " + req.body.participationName;
-  res.sendStatus(200);
-});
-
-
-// http://localhost:3000
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`);
-});
-
-
-/*
-
-const wss = new WebSocket.Server({ server : httpServer });
+//websocket methods
 wss.on('connection', function connection(ws) {
-  newUser(ws);
-
-  // send back chat history when new user come
-  if (chatHistory.length > 0) {
-    ws.send(JSON.stringify({type: 'chatHistory', data: chatHistory}));
-  }
 
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
+    var nameObj = JSON.parse(message);
 
-    var jsonObj = JSON.parse(message);
-    if (jsonObj.eventType == 'sendGroupChat') {
-      jsonObj.data.name = users[jsonObj.data.userId].name;
-
-      //increases the number of messages sent by the user when sending a message
-      users[jsonObj.data.userId].amountMsg++ ;
-
-      // add chat text into chatHistory, if the msg start not '/'
-      if (!jsonObj.data.msg.startsWith("/")){
-        var text = {
-          time: new Date().toLocaleTimeString(),
-          msg: jsonObj.data.msg,
-          userId: jsonObj.data.userId,
-          name: jsonObj.data.name
-        };
-        chatHistory.push(text);
-      }
-
-      //reflection exercise 1 - Smilies
-      if (jsonObj.data.msg.startsWith(":") || jsonObj.data.msg.startsWith(";")) {
-        if (jsonObj.data.msg === ":)") {
-          jsonObj.data.msg = "&#128578"; // smiley face
-        } else if (jsonObj.data.msg === ":(") {
-          jsonObj.data.msg = "&#128577";// upset
-        } else if (jsonObj.data.msg === ":D") {
-          jsonObj.data.msg = "&#128515"; //SMILING FACE WITH OPEN MOUTH
-        } else if (jsonObj.data.msg === ";)") {
-          jsonObj.data.msg = "&#128521"; //WINKING FACE
-        } else if (jsonObj.data.msg === ";p") {
-          jsonObj.data.msg = "&#128540"; //FACE WITH STUCK-OUT TONGUE AND WINKING EYE
-        }
-      }
-
-      sendToAllClients(JSON.stringify(jsonObj)); // broadcast
-
-    } else if (jsonObj.eventType == 'draw') {
-      sendToAllClients(message); // broadcast
-    }
-    else if (jsonObj.eventType == 'setName') {
-      console.log("set name of user id + " + jsonObj.data.userId +
-      " from " + users[jsonObj.data.userId].name + " to " + jsonObj.data.name);
-      users[jsonObj.data.userId].name = jsonObj.data.name;
-
-    }else if (jsonObj.eventType == 'textDraw') {
-      sendToAllClients(message); // broadcast
-    }else if (jsonObj.eventType == 'smiley'){
-      sendToAllClients(message);
-    }
-    // todo other messages
-
+    if (nameObj.eventType === 'joinNewStudent') {
+      console.log('running');
+      studentsNames = studentsNames + " " + nameObj.data.participationName;
+      sendToAllClients(JSON.stringify({type: 'getNewName', names: studentsNames}));
+    } 
   });
+
   ws.on('close', function close(number, reason) {
     console.log('close, number: ' + number + " reason: " + reason);
   });
+
 });
 
+// send the new joined Student names to teacher page via Ws
+// function sendNameTeacherOverview(name){}
+
+// we use this func in the future
+// send data all clients for Broadcast
 function sendToAllClients(msg) {
   wss.clients.forEach(function(client) {
       client.send(msg);
   });
 }
-*/
