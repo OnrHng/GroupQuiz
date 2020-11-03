@@ -4,6 +4,25 @@ const participationName = document.getElementById('studentName');
 const pageDiv = document.getElementById('pageDiv');
 const message = document.getElementById("message");
 
+// web socket on frontend , should implement here
+var socket = new WebSocket("ws://localhost:3000/");
+socket.onopen = function(e) {
+  console.log("[open] Connection established");
+};
+
+socket.onclose = function(event) {
+  if (event.wasClean) {
+    console.log(`[close] Connection closed cleanly, reason=${event.reason}`);
+  } else {
+    // e.g. server process killed or network down
+    console.log('[close] Connection died, code:' + event.code);
+  }
+};
+
+socket.onerror = function(error) {
+  console.log(`[error] ${error.message}`);
+};
+
 function checkCode() {
   fetch("/quizStart")
   .then(response => response.json())
@@ -18,38 +37,12 @@ function checkCode() {
      message.textContent="The participation code is wrong";
     }
   });
-  
-  // should be send participation Name to server after 3 second
-  // var timeleft = 3;
-  // var downloadTimer = setInterval(function(){
-  // if(timeleft < 0){
-  //   clearInterval(downloadTimer);
-  // } else {
-  //   message.textContent = timeleft + " seconds remaining";
-  // }
-  // timeleft -= 1;
-  // }, 1000);
-
-  // setInterval(function() { postName();}, 4000);
 }
 
 function postName() {
-  fetch("/getParticipantName", 
-  {
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
-    method: "POST",
-    body: JSON.stringify({participationName: participationName.value })
-  })
-  .then(response => {
-    if(response.ok ){
-      console.log('name is send');
-      //window.location.href="../htmls/quizStart.html";
-    }
-    //response.json()
-  });
+  socket.send(JSON.stringify({eventType: 'joinNewStudent', data: {
+    participationName: participationName.value 
+  }}));
 }
 
 // event Listeners

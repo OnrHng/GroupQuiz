@@ -100,7 +100,7 @@ async function postQuestions(event) {
       },
       method: "POST",
       body: JSON.stringify({
-        quiz_Id: quizNameId,
+        quizId: quizNameId,
         question: question.value,
         option1: answerA.value,
         option2 : answerB.value,
