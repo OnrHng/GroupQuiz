@@ -99,7 +99,6 @@ wss.on('connection', function connection(ws) {
     var nameObj = JSON.parse(message);
 
     if (nameObj.eventType === 'joinNewStudent') {
-      console.log('running');
       studentsNames = studentsNames + " " + nameObj.data.participationName;
       sendToAllClients(JSON.stringify({type: 'getNewName', names: studentsNames}));
     } 
