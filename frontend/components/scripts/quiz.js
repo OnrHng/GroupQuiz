@@ -25,3 +25,35 @@ var url = new URL('http://localhost:3000/quiz')
 function goQuizStart() {
     window.location.href = "../htmls/quizStart.html"
 }
+
+
+
+Object.prototype.remove = function(){
+    this.parentNode.parentNode.removeChild(this.parentNode);
+};
+Object.prototype.removeDB = function(){
+    var parent=this.parentElement;
+    var firstChild=parent.firstElementChild;
+    var quiz=firstChild.textContent;
+    var url = new URL('http://localhost:3000/removeDB/'+ quiz)
+    fetch(url,
+        {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            method: "Delete",
+            body: JSON.stringify({quiz:quiz})
+        })
+        .then(response => response.json())
+        .then(function(data) {
+            var resultP = document.getElementById('result');
+            resultP.innerText = "quiz " + data.quiz + " was successfully delete from database!";
+        });
+}
+var divs = document.querySelectorAll('div');
+var del = document.querySelectorAll('.del');
+for (var i = 0, len = divs.length; i < len; i++) {
+    del[i].addEventListener('click',removeDB,false);
+    del[i].addEventListener('click', remove, false);
+}
