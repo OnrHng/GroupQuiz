@@ -17,11 +17,23 @@ var url = new URL('http://localhost:3000/quiz')
             cell2.innerText = item.quiz_name; 
             cell3.innerHTML = '<button class="button" value="Edit"  onClick="edit(this)">Edit</button>'; 
             cell4.innerHTML = '<button class="button" value="Delete"  onClick="delete(this">Delete</button>'; 
-            cell5.innerHTML = '<button class="button" id="'+item.quiz_Id+'" onClick="goQuizStart()">'+'<i class="fa fa-play">'+'</i>'+'</button> ';
+            cell5.innerHTML = '<button class="button" id="'+item.quiz_name+'" onClick="goQuizStart(this)">'+'<i class="fa fa-play">'+'</i>'+'</button> ';
             
         }
     });
 
-function goQuizStart() {
-    window.location.href = "../htmls/quizStart.html"
+function goQuizStart(button) {
+    var quizName = button.id;
+    fetch("/quizStart", {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({
+            quizName: quizName,
+        })})
+        .then(function () {
+            window.location.href = "../htmls/quizStart.html"
+        })
 }

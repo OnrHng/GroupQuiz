@@ -79,9 +79,16 @@ app.get("/quiz", (req, res) => {
   });
 });
 
+// Send Quiz Name from Play Button
+var quizName;
+app.post("/quizStart", function(req, res){
+  quizName = req.body.quizName;
+  res.json({quizName});
+});
+
 // generate Code and send the code to frontend
 app.get('/quizStart', function(req, res) {
-  res.json({praticipationCode});
+  res.json({praticipationCode, quizName});
 });
 
 //websocket methods
@@ -92,7 +99,6 @@ wss.on('connection', function connection(ws) {
     var nameObj = JSON.parse(message);
 
     if (nameObj.eventType === 'joinNewStudent') {
-      console.log('running');
       studentsNames = studentsNames + " " + nameObj.data.participationName;
       sendToAllClients(JSON.stringify({type: 'getNewName', names: studentsNames}));
     } 
