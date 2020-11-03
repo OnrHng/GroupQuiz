@@ -92,85 +92,87 @@ const questionTemplate = `
     `;
 
 // click Submit Button 
-var quizId = 0;
+var quizId;
 function submitQuiz() {
-  var questionContainerArray = document.getElementsByClassName("questionContainer");
-  var quizName = document.getElementById("quizName").value;
+  var formQuizTitle = document.getElementById("formQuizTitle");
+  var formQuestion = document.getElementById("formQuestion");
+  var validation = !(formQuizTitle.reportValidity() && formQuestion.reportValidity())
 
-  // get questionId
-  fetch("/submitQuizName", {
-  headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  },
-  method: "POST",
-  body: JSON.stringify({
-    quizName: quizName,
-  })})
-  .then(response => response.json())
-  .then(function(response) {
-    quizId = response.id;
-    console.log(quizId);
-  })
-  .then(function() {
-  
+  // check validity
+  if (validation) {
+    return
+  } else {
+    var questionContainerArray = document.getElementsByClassName("questionContainer");
+    var quizName = document.getElementById("quizName").value;
 
-  // parse each question
-  for (var i of questionContainerArray) {
-    var inputArray = i.getElementsByTagName("input");
+    // get questionId
+    fetch("/submitQuizName", {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    method: "POST",
+    body: JSON.stringify({
+      quizName: quizName,
+    })})
+    .then(response => response.json())
+    .then(function(response) {
+      quizId = response.id;
+    })
+    .then(function() {
     
-    var question = inputArray[0].value;
-    var a = inputArray[1].value;
-    var b = inputArray[3].value;
-    var c = inputArray[5].value;
-    var d = inputArray[7].value;
 
-    var radiobtnA = inputArray[2];
-    var radiobtnB = inputArray[4];
-    var radiobtnC = inputArray[6];
+    // parse each question
+    questionCount = 0;
+    for (var i of questionContainerArray) {
+      var inputArray = i.getElementsByTagName("input");
+      
+      var question = inputArray[0].value;
+      var a = inputArray[1].value;
+      var b = inputArray[3].value;
+      var c = inputArray[5].value;
+      var d = inputArray[7].value;
 
-    var correctAnswer;
-    if (radiobtnA.checked) {
-      correctAnswer = "a";
-    }
-    else if (radiobtnB.checked) {
-      correctAnswer = "b";
-    }
-    else if (radiobtnC.checked) {
-      correctAnswer = "c";
-    } else {
-      correctAnswer = "d"
-    }
+      var radiobtnA = inputArray[2];
+      var radiobtnB = inputArray[4];
+      var radiobtnC = inputArray[6];
 
-    // fetch each question
-    fetch("/postQuestions", {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({
-        quizId: quizId,
-        question: question,
-        option1: a,
-        option2: b,
-        option3: c,
-        option4: d,
-        correctAnswer: correctAnswer, 
-      })
+      var correctAnswer;
+      if (radiobtnA.checked) {
+        correctAnswer = "a";
       }
-    ).then(function(response) {
-      console("test")
-    });
+      else if (radiobtnB.checked) {
+        correctAnswer = "b";
+      }
+      else if (radiobtnC.checked) {
+        correctAnswer = "c";
+      } else {
+        correctAnswer = "d"
+      }
 
+      // fetch each question
+      fetch("/postQuestions", {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({
+          quizId: quizId,
+          question: question,
+          option1: a,
+          option2: b,
+          option3: c,
+          option4: d,
+          correctAnswer: correctAnswer, 
+        })
+        }
+      )
+      questionCount++
+    };
+    alert(`Created Quiz "${quizName}" with ${questionCount} Question(s)!`)
 
-  };
-
-  window.location.href = "../htmls/quiz.html";
-  
-})};
-
-// EvenListener
-document.getElementById("submitQuizButton").addEventListener('click', function () {document.getElementById("formQuizTitle").submit()});
-// questionFrom.addEventListener('submit', postQuestions);
-// submitQuizButton.addEventListener('click', submitQuiz);
+    window.location.href = "../htmls/quiz.html";
+    
+    })};
+}
