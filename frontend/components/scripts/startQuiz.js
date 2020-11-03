@@ -1,11 +1,15 @@
 const namesDiv=document.getElementById("studentsNames");
+const quizNameDiv = document.getElementById('quizName');
 
-fetch("/quizStart")
-.then(response => response.json())
-.then(function(data) {
-  document.getElementById('h2').innerText  += data.praticipationCode.praticipationCode;
-  console.log(data);
-});
+// Play Button - Show Quiz Name
+window.onload = function() {
+  fetch("/quizStart")
+    .then(response => response.json())
+    .then(function(data) {
+      document.getElementById('h2').innerText  += data.praticipationCode.praticipationCode;
+      quizNameDiv.innerText = quizNameDiv.innerText + " " + data.quizName;
+  });
+};
 
 // should be display all students name
 // web socket on frontend , should implement here
@@ -15,11 +19,10 @@ socket.onopen = function(e) {
 };
 
 socket.onmessage = function(event) {
-  console.log(`[message] Data received from server: ${event.data}`);
+  //console.log(`[message] Data received from server: ${event.data}`);
   var jsonObj = JSON.parse(event.data);
 
   if(jsonObj.type === 'getNewName') {
-    console.log('running');
     // document.getElementById('h2').innerText  += jsonObj.praticipationCode;
     namesDiv.textContent = jsonObj.names;
   }

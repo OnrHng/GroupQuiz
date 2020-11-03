@@ -78,9 +78,16 @@ app.get("/quiz", (req, res) => {
   });
 });
 
+// Send Quiz Name from Play Button
+var quizName;
+app.post("/quizStart", function(req, res){
+  quizName = req.body.quizName;
+  res.json({quizName});
+});
+
 // generate Code and send the code to frontend
 app.get('/quizStart', function(req, res) {
-  res.json({praticipationCode});
+  res.json({praticipationCode, quizName});
 });
 
 //websocket methods
