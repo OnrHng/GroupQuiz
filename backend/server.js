@@ -17,8 +17,8 @@ app.use(bodyParser.json()); // accept json data
 app.use(express.static('../frontend'));
 
 
-connection = mysql.createConnection(dbconfig.dbSettings);
-connection.connect((err) => {
+db = mysql.createConnection(dbconfig.dbSettings);
+db.connect((err) => {
   if (err) {
     console.log('Error connecting to DB: change connection settings!');
   } else {
@@ -47,7 +47,7 @@ function escapeHtml(unsafe) {
 
 // submit quiz name on DB
 app.post('/submitQuizName', (req, res) => {
-  connection.query("INSERT INTO quiz (quiz_name) values (?)", escapeHtml(req.body.quizName),
+  db.query("INSERT INTO quiz (quiz_name) values (?)", escapeHtml(req.body.quizName),
     (err, result) => {
       if (err) throw err;
       console.log("created a new quiz name with id ", result.insertId);
@@ -58,7 +58,7 @@ app.post('/submitQuizName', (req, res) => {
 
 // Post Questions on DB
 app.post('/postQuestions', (req, res) => {
-  connection.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)",
+  db.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)",
     [req.body.quizId, req.body.question, req.body.option1, req.body.option2,
     req.body.option3, req.body.option4, req.body.correctAnswer],
 
@@ -73,7 +73,7 @@ app.post('/postQuestions', (req, res) => {
 
 // select all quizes
 app.get("/quiz", (req, res) => {
-  connection.query('SELECT * FROM quiz', (err, rows) => {
+  db.query('SELECT * FROM quiz', (err, rows) => {
       if(err) throw err;
       res.json(rows);
   });
@@ -96,12 +96,25 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
-    var nameObj = JSON.parse(message);
+    var jsonObj = JSON.parse(message);
 
-    if (nameObj.eventType === 'joinNewStudent') {
-      studentsNames = studentsNames + " " + nameObj.data.participationName;
+    if (jsonObj.eventType === 'joinNewStudent') {
+      studentsNames = studentsNames + " " + jsonObj.data.participationName;
       sendToAllClients(JSON.stringify({type: 'getNewName', names: studentsNames}));
-    } 
+    }
+    
+    if (jsonObj.eventType === 'playQuiz') {
+      // sql query to get all questions
+      db.query("select * from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
+        [jsonObj.data], (err, results) => {
+          if(err) throw err;
+          //console.log(results);
+
+          //  post all question all clients.
+          sendToAllClients(JSON.stringify({type: 'getAllQuestions', questions: results}));
+      });
+
+    }
   });
 
   ws.on('close', function close(number, reason) {

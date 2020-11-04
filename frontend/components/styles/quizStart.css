@@ -29,4 +29,20 @@ body {
     padding: 7px;
     box-sizing: border-box;
   }
-  
+
+button {
+  cursor: pointer;
+  height: 40px;
+  width: auto;
+  background-color: black;
+  color: white;
+  font-size: 22px;
+  padding: 4px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+button:hover {
+  filter: brightness(200%);
+}
