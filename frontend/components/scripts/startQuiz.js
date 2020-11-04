@@ -1,15 +1,25 @@
 const namesDiv=document.getElementById("studentsNames");
 const quizNameDiv = document.getElementById('quizName');
+const startButton = document.getElementById('startNow');
+let quizName;
 
 // Play Button - Show Quiz Name
 window.onload = function() {
   fetch("/quizStart")
     .then(response => response.json())
     .then(function(data) {
+      quizName = data.quizName;
       document.getElementById('h2').innerText  += data.praticipationCode.praticipationCode;
       quizNameDiv.innerText = quizNameDiv.innerText + " " + data.quizName;
   });
 };
+
+// Start Quiz
+function startQuiz() {
+  console.log('start');
+  // 1. send the quiz name to server
+  socket.send(JSON.stringify({eventType: 'playQuiz', data: quizName}));
+}
 
 // should be display all students name
 // web socket on frontend , should implement here
@@ -40,3 +50,6 @@ socket.onclose = function(event) {
 socket.onerror = function(error) {
   console.log(`[error] ${error.message}`);
 };
+
+// Event Listeners
+startButton.addEventListener('click', startQuiz);
