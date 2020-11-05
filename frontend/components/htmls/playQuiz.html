@@ -7,15 +7,18 @@
     <link rel="stylesheet" type="text/css" href="../styles/playQuiz.css">
   </head>
   <body>
-    <div class="playquiz-container" >
+    <div class="playquiz-container">
       <h1 id="question">Question 1</h1> <br> <br>
         <div class="btn-group" id='pageDiv'>
-          <button id="option1"  class="button">Option 1</button>      <button id="option2"  class="button">Option 2</button> <br> <br> <br>
+          <button id="option1"  class="button">Option 1</button>      <button id="option2" class="button">Option 2</button> <br> <br> <br>
           <!--Kannst du bitte helfen diese buttons nich getrent zu machen-->
-          <button id="option3" class="button">Option 3</button>     <button id="option4"  class="button">Option 4</button> <br> <br> <br>
+          <button id="option3" class="button">Option 3</button>     <button id="option4" class="button">Option 4</button> <br> <br> <br>
         </div>
-          <div><h4 id="timer"></h4></div> <!--This is place for 30 seconds timer-->
+          <div>
+            <h4 id="timer"></h4> <!--This is place for 30 seconds timer-->
+            <h4 id="message"></h4>
         </div>
+      <h1 id="Finish" hidden>Finish! Answered all questions!</h1>
     </div>
     <script src="../scripts/playQuiz.js"></script>
 </body>
