@@ -14,8 +14,10 @@ socket.onmessage = function(event) {
   var jsonObj = JSON.parse(event.data);
 
   if(jsonObj.type === 'getAllQuestions') {
-    // go playQuiz page
-    window.location.href = "../htmls/playQuiz.html";
+    // go playQuiz page if student login in
+    if (pageDiv.textContent.startsWith('Please wait for')) {
+      window.location.href = "../htmls/playQuiz.html";
+    }
   }
 };
 
