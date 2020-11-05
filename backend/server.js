@@ -120,7 +120,7 @@ wss.on('connection', function connection(ws) {
     if (jsonObj.eventType === 'playQuiz') {
       // sql query to get all questions
       db.query("select * from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
-        [jsonObj.data], (err, results) => {
+        [quizName], (err, results) => {
           if(err) throw err;
           //console.log(results);
 
