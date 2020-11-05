@@ -2,8 +2,10 @@
 
 html{
   box-sizing: border-box;
+  
 }
 body {
+ 
   margin: 0;
   min-height: 100vh;
   font-family: Sen, sans-serif;
@@ -19,8 +21,8 @@ body {
 h1 {
   text-align: center;
 }
-
 .editor-container {
+  overflow: scroll;
   width: 480px;
   height: 630px;
   background: rgba(255, 255, 255, 0.8);
@@ -41,6 +43,7 @@ fieldset {
   border-radius: 10px;
 }
 #question {
+  
   width: 100%;
   margin-top: 3px;
 }
@@ -56,24 +59,29 @@ input {
   width: 100%;
 }
 .answersTitle {
+  
   float: left;
 }
 .correctTitle {
   float: right;
 }
 .answers-wraper {
+  
   width: 100%;
 }
 .answer  {
+
   display: flex;
   width: 100%;
 }
 div.answer > input[type="text"] {
+
   width: 80%;
   margin-top: 7px;
 }
 
-div.answer > input[type="radio"] {
+div.answer > input[type="radio"] 
+{
   width: 20%;
   margin-top: 7px;
 
@@ -123,6 +131,24 @@ button:active:hover {
 .disabled {
   background-color: darkgrey;
   cursor: not-allowed;
+}
+
+#cancelButton {
+  cursor: pointer;
+  height: 30px;
+  width: 120px;
+  background-color: black;
+  color: white;
+  font-size: 18px;
+  padding: 4px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+#cancelButton:hover {
+  filter: brightness(200%);
 }
 
 /* Media Query: iPhone (Vertical) */

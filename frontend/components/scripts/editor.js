@@ -5,6 +5,7 @@ const nextButton = document.getElementById('nextButton');
 const qiuzTitleForm = document.getElementById('formQuizTitle');
 const questionTemplateDiv = document.getElementById('questionTemplate');
 const quizTitleButton = document.getElementById('quizTitleButton');
+const questionContainer = document.getElementById("quetion-cosntainer");
 
 // data for create new Quiz
 const quizName = document.getElementById('quizName');
@@ -38,17 +39,30 @@ function getCorrectAnswer() {
   } 
 }
 
+var radioBtnCount = 1;
 // click next Button
 function displayNextQuestion() {
-  // get here question template
-}
+  newQuestionDiv = document.createElement("div");
+  newQuestionDiv.innerHTML = questionTemplate
+  newQuestionDiv.className = "questionContainer";
+
+  // input fields
+  newQuestionDiv.getElementsByTagName("input")[2].name = "correct" + radioBtnCount;
+  newQuestionDiv.getElementsByTagName("input")[4].name = "correct" + radioBtnCount; 
+  newQuestionDiv.getElementsByTagName("input")[6].name = "correct" + radioBtnCount; 
+  newQuestionDiv.getElementsByTagName("input")[8].name = "correct" + radioBtnCount; 
+  radioBtnCount++;
+
+  // questionContainer.append(newQuestionDiv);
+  document.getElementById("formQuestion").append(newQuestionDiv);
+};
 
 // define question template to add new question
 const questionTemplate = `
   <fieldset style="margin-top: 10px;">
     <legend>Define Question</legend>
     <label for="question">Question</label>
-    <input type="text" name="question" id="question" placeholder="Type Question" required>
+    <input type="text" name="question" placeholder="Type Question" required>
     <!-- Answers -->
     <div class="answers-container">
       <div class="answers-title">
@@ -57,112 +71,108 @@ const questionTemplate = `
       </div>
       <div class="answers-wraper">
         <div class="answer">
-          <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-          <input type="radio" name="correct" id="correctA" checked>
+          <input type="text" name="A" placeholder="Type Answer A" required>
+          <input type="radio" name="correct" checked>
         </div>
         <div class="answer">
-          <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
-          <input type="radio" name="correct" id="correctB">
+          <input type="text" name="B" placeholder="Type Answer B" required>
+          <input type="radio" name="correct">
         </div>
         <div class="answer">
-          <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
-          <input type="radio" name="correct" id="correctC">
+          <input type="text" name="A" placeholder="Type Answer C" required>
+          <input type="radio" name="correct">
         </div>
         <div class="answer">
-          <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
-          <input type="radio" name="correct" id="correctD">
+          <input type="text" name="A" placeholder="Type Answer D" required>
+          <input type="radio" name="correct">
         </div>
       </div>
     </div>
   </fieldset>
-  <div class="nextQuestion">
-  <input type="submit" value="NEXT" id="nextButton">
-  </div>
-
     `;
 
 // click Submit Button 
-function submitQuiz(event) {
-  window.location.href = "../htmls/quiz.html"
-}
+var quizId;
+function submitQuiz() {
+  var formQuizTitle = document.getElementById("formQuizTitle");
+  var formQuestion = document.getElementById("formQuestion");
+  var validation = !(formQuizTitle.reportValidity() && formQuestion.reportValidity())
 
-// post Questions
-async function postQuestions(event) {
-  event.preventDefault();
-  getCorrectAnswer();
-  
-  // if the quiz name is not saved show the message!!
-  if(quizTitleButton.disabled) {
-    fetch("/postQuestions", {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({
-        quiz_Id: quizNameId,
-        question: question.value,
-        option1: answerA.value,
-        option2 : answerB.value,
-        option3 : answerC.value,
-        option4 : answerD.value,
-        correctAnswer: correctAnswer
-      })
-      }
-    ).then(function(response) {
-      if(response.ok){
-        console.log('question is posted!')
-        // new question template HERE
-        questionTemplateDiv.innerHTML = '';
-        questionTemplateDiv.innerHTML = questionTemplate;
-      
-        // increment question number and display it
-        questionNumber++;
-        document.getElementById('questionNumber').textContent = questionNumber + " Questions ADDED!";
-  
-      } else {
-        console.log('eroor');
-      }
-    });
-  }else {
-    alert('Please Save Quiz Name!!!');
-  }
+  // check validity
+  if (validation) {
+    return
+  } else {
+    var questionContainerArray = document.getElementsByClassName("questionContainer");
+    var quizName = document.getElementById("quizName").value;
 
-}
-
-// ASYNC FUNC SHOULD BE
-// save quiz name
-async function saveQuizName(event){
-  event.preventDefault();
-  console.log('save quiz name clicked');
-
-  fetch("/saveQuizName", {
+    // get questionId
+    fetch("/submitQuizName", {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     },
     method: "POST",
     body: JSON.stringify({
-        quizName : quizName.value
-      })})
-    .then(async function(response) {
-      if(response.ok){
-        var quiz =await response.json();
-        console.log(quiz);
-        console.log('quiz is posted! and quiz number is ' + quiz.id);
-        quizNameId = quiz.id;
-        // save button should be disable
-        document.getElementById('quizTitleButton').disabled = true;
-        document.getElementById('quizTitleButton').classList.add('disabled');
+      quizName: quizName,
+    })})
+    .then(response => response.json())
+    .then(function(response) {
+      quizId = response.id;
+    })
+    .then(function() {
+    
 
-      } else {
-        console.log('eroor');
+    // parse each question
+    questionCount = 0;
+    for (var i of questionContainerArray) {
+      var inputArray = i.getElementsByTagName("input");
+      
+      var question = inputArray[0].value;
+      var a = inputArray[1].value;
+      var b = inputArray[3].value;
+      var c = inputArray[5].value;
+      var d = inputArray[7].value;
+
+      var radiobtnA = inputArray[2];
+      var radiobtnB = inputArray[4];
+      var radiobtnC = inputArray[6];
+
+      var correctAnswer;
+      if (radiobtnA.checked) {
+        correctAnswer = "a";
       }
-  });
+      else if (radiobtnB.checked) {
+        correctAnswer = "b";
+      }
+      else if (radiobtnC.checked) {
+        correctAnswer = "c";
+      } else {
+        correctAnswer = "d"
+      }
 
+      // fetch each question
+      fetch("/postQuestions", {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        method: "POST",
+        body: JSON.stringify({
+          quizId: quizId,
+          question: question,
+          option1: a,
+          option2: b,
+          option3: c,
+          option4: d,
+          correctAnswer: correctAnswer, 
+        })
+        }
+      )
+      questionCount++
+    };
+    alert(`Created Quiz "${quizName}" with ${questionCount} Question(s)!`)
+
+    window.location.href = "../htmls/quiz.html";
+    
+    })};
 }
-
-// EvenListener
-qiuzTitleForm.addEventListener('submit', saveQuizName);
-questionFrom.addEventListener('submit', postQuestions);
-submitQuizButton.addEventListener('click', submitQuiz);
