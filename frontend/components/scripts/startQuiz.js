@@ -19,6 +19,7 @@ function startQuiz() {
   console.log('start');
   // 1. send the quiz name to server
   socket.send(JSON.stringify({eventType: 'playQuiz', data: quizName}));
+  // student 
 }
 
 // should be display all students name
