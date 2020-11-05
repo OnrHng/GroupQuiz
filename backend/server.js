@@ -79,6 +79,20 @@ app.get("/quiz", (req, res) => {
   });
 });
 
+// delete one quiz
+app.delete('/deleteQuiz', (req, res) => {
+  connection.query("delete from quiz where quiz_Id = ? ",[req.body.quizId],
+    (err, result) => {
+      if(err) throw err;
+      if (result.affectedRows == 0) {
+        res.sendStatus(404);
+      } else {
+        res.json({"delete": result.affectedRows});
+      }
+    }
+  );
+});
+
 // Send Quiz Name from Play Button
 var quizName;
 app.post("/quizStart", function(req, res){
