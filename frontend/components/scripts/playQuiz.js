@@ -1,25 +1,43 @@
+const pageDiv = document.getElementById('pageDiv');
+const message = document.getElementById("message");
+var questions;
 
-// var questions = [
-//         {
-//             question: "Hallo wie gehts?",
-//             option1: "a",
-//             option2: "b",
-//             option3: "c",
-//             option4: "d",
-//             correctAnswer: "correctAnswer"
-//         },
-//         {
-//             question: "Was machst du heute?",
-//             option1: "ga",
-//             option2: "sd",
-//             option3: "df",
-//             option4: "dbsdb",
-//             correctAnswer: "correctAnswer"
-//         },
-// ];
+// web socket on frontend , should implement here
+var socket = new WebSocket("ws://localhost:3000/");
+socket.onopen = function(e) {
+  console.log("[open] Connection established");
+  socket.send(JSON.stringify({eventType: 'playQuiz'}));
+
+};
+
+socket.onmessage = function(event) {
+//   console.log(`[message] Data received from server: ${event.data}`);
+  var jsonObj = JSON.parse(event.data);
+
+  if(jsonObj.type === 'getAllQuestions') {
+    console.log(jsonObj.questions);
+    questions = jsonObj.questions;
+  }
+};
+
+socket.onclose = function(event) {
+  if (event.wasClean) {
+    console.log(`[close] Connection closed cleanly, reason=${event.reason}`);
+  } else {
+    // e.g. server process killed or network down
+    console.log('[close] Connection died, code:' + event.code);
+  }
+};
+
+socket.onerror = function(error) {
+  console.log(`[error] ${error.message}`);
+};
+
+
+
 
 // display questions every 30 seconds
-var questions = jsonObj.questions;
+
 var time = 3 * 1000; // changing later to 30
 var index = 0;
 var interval;
@@ -51,3 +69,6 @@ function displayNextQuesion() {
     index++;
     return
 };
+
+
+
