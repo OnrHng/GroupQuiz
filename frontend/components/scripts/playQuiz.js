@@ -97,7 +97,7 @@ function buttonDisable(boolean) {
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
 const timer = document.getElementById("timer");
-const maxTime = 3; // Change here the time
+const maxTime = 30; // Change here the time
 var currentTime = maxTime;
 
 function countDown() {
