@@ -70,7 +70,7 @@ function displayNextQuesion() {
 const message = document.getElementById("message");
 const buttonStandartColor = buttonArray[0].style.backgroundColor;
 
-function buttonDisable(boolean) {
+function buttonDisable(boolean, selectedButton) {
   message.innerText = "Please wait for next question!";
 
   buttonArray.forEach(item => {
@@ -83,6 +83,11 @@ function buttonDisable(boolean) {
       item.style.background = buttonStandartColor;
     }
   })
+  // selected Option
+  if (selectedButton != null) {
+    selectedButton.style.background = buttonStandartColor;
+  }
+  return;
 };
 
 // Counter
@@ -122,7 +127,4 @@ function countDown() {
 };
 
 // EventListeners
-buttonArray.forEach(item => {item.addEventListener('click', () => buttonDisable(true))});
-
-
-
+buttonArray.forEach(button => {button.addEventListener('click', () => buttonDisable(true, button))});
