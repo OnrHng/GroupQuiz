@@ -20,8 +20,8 @@ input {
 }
 button {
   cursor: pointer;
-  height: 40px;
-  width: 90px;
+  height: 80px;
+  width: 160px;
   background-color: black;
   color: white;
   font-size: 20px;
