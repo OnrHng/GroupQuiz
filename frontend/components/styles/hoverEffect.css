@@ -1,0 +1,7 @@
+input[type=button]:hover, button:hover {
+    color: #000 !important;
+    font-style: italic;
+    border-color: transparent !important;
+    background: rgba(0, 0, 0, 0.15) !important;
+    transition: all .4s;
+}

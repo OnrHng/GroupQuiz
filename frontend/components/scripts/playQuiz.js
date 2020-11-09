@@ -14,6 +14,7 @@ socket.onmessage = function(event) {
 
   if(jsonObj.type === 'getAllQuestions') {
     console.log(jsonObj.questions);
+    console.log(jsonObj);
     questionsArray = jsonObj.questions;
   }
 };
@@ -46,7 +47,7 @@ window.onload = function() {
 
 // display next question
 var question = document.getElementById("question");
-const buttonArray = document.querySelector(".btn-group").querySelectorAll("button");
+const buttonArray = document.querySelectorAll(".btn-group > button");
 
 var index = 0;
 function displayNextQuesion() {  
