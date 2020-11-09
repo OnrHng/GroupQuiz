@@ -127,8 +127,12 @@ wss.on('connection', function connection(ws) {
           //  post all question all clients.
           sendToAllClients(JSON.stringify({type: 'getAllQuestions', questions: results}));
       });
+      if (jsonObj.eventType === 'selectedOption') {
+        console.log(jsonObj.selectedOption)
 
-    }
+
+
+    }}
   });
 
   ws.on('close', function close(number, reason) {

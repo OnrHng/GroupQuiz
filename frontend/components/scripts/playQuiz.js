@@ -1,4 +1,5 @@
 var questionsArray;
+var questionId;
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
@@ -13,9 +14,8 @@ socket.onmessage = function(event) {
   var jsonObj = JSON.parse(event.data);
 
   if(jsonObj.type === 'getAllQuestions') {
-    console.log(jsonObj.questions);
-    console.log(jsonObj);
     questionsArray = jsonObj.questions;
+    console.log(questionsArray);
   }
 };
 
@@ -50,7 +50,11 @@ var question = document.getElementById("question");
 const buttonArray = document.querySelectorAll(".btn-group > button");
 
 var index = 0;
-function displayNextQuesion() {  
+function displayNextQuesion() {
+    if (index > 0) {
+      questionId = questionsArray[index-1].question_Id; 
+
+    }
     if (index < questionsArray.length) {
         question.innerText = questionsArray[index].question;
 
@@ -70,32 +74,36 @@ function displayNextQuesion() {
 // Button Disable
 const message = document.getElementById("message");
 const buttonStandartColor = buttonArray[0].style.backgroundColor;
+var selectedOption = null;
 
 function buttonDisable(boolean, selectedButton) {
   message.innerText = "Please wait for next question!";
 
-  buttonArray.forEach(item => {
-    item.disabled = boolean
+  buttonArray.forEach(button => {
+    button.disabled = boolean;
 
     // changing Color
     if (boolean) {
-      item.style.background = "grey";
+      button.style.background = "grey";
     } else {
-      item.style.background = buttonStandartColor;
+      button.style.background = buttonStandartColor;
     }
   })
   // selected Option
   if (selectedButton != null) {
     selectedButton.style.background = buttonStandartColor;
+    selectedOption = selectedButton.id;
+  } else {
+    selectedOption = null;
   }
-  return;
+  return
 };
 
 // Counter
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
 const timer = document.getElementById("timer");
-const maxTime = 30; // Change here the time
+const maxTime = 3; // Change here the time
 var currentTime = maxTime;
 
 function countDown() {
@@ -111,15 +119,15 @@ function countDown() {
         timer.innerHTML = msg;
         currentTime--;}
   }
-  else if (currentTime < 0){
-      if (displayNextQuesion()){
+  else if (currentTime < 0){ // when timer reaches 0
+      if (displayNextQuesion()){ 
+        sendSelectedOption(selectedOption);
         buttonDisable(false);
         currentTime = maxTime;
         message.innerText = "";
-      } else {
-        for (var i of quizContainer.children) {
-          i.hidden = true;
-        }
+      } else { // when no question available
+        sendSelectedOption(selectedOption);
+        for (var i of quizContainer.children) {i.hidden = true;}
         finish.hidden = false;
         clearInterval(intervalSec);
       }
@@ -127,5 +135,17 @@ function countDown() {
   return;
 };
 
+// Send selected Option to backend
+function sendSelectedOption(selectedOption) {
+  socket.send(JSON.stringify({
+    eventType: 'selectedOption', 
+    selectedOption: selectedOption, 
+    questionId: questionId
+  }));
+  console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
+};
+
 // EventListeners
-buttonArray.forEach(button => {button.addEventListener('click', () => buttonDisable(true, button))});
+buttonArray.forEach(button => {button.addEventListener('click', function() {
+  buttonDisable(true, button);
+})});
