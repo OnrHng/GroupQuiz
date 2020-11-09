@@ -84,16 +84,16 @@ function buttonDisable(boolean, selectedButton) {
   
     // changing Color
     if (boolean) { // disable
-      button.style.background = "grey";
+      button.classList.add("disabledButton");
       button.classList.remove("hover");
     } else { // enable
-      button.style.background = buttonStandartColor;
       button.classList.add("hover");
+      button.classList.remove("disabledButton");
     }
   })
   // selected Option
   if (selectedButton != null) {
-    selectedButton.style.background = buttonStandartColor;
+    selectedButton.classList.remove("disabledButton");
     selectedOption = selectedButton.id;
   } else {
     selectedOption = null;

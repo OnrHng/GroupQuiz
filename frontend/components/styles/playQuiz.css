@@ -69,8 +69,13 @@ label {
 /* add class "hover" to object for hovereffect */
 .hover:hover {
   color: #000 !important;
-  font-style: italic;
+  /* font-style: italic; */
   border-color: transparent !important;
   background: rgba(0, 0, 0, 0.15) !important;
   transition: all .4s;
+}
+.disabledButton {
+  color: #000 !important;
+  border-color: transparent !important;
+  background: rgba(0, 0, 0, 0.15) !important;
 }
