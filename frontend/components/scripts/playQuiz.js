@@ -86,7 +86,7 @@ function buttonDisable(boolean, selectedButton) {
   })
   // selected Option
   if (selectedButton != null) {
-    selectedButton.style.background = buttonStandartColor;
+    selectedButton.style.background = buttonStan dartColor;
   }
   return;
 };
