@@ -66,16 +66,20 @@ label {
   font-size: 20px;
   color: red;
 }
-/* add class "hover" to object for hovereffect */
+/* buttons */
+:root {
+  --btnColor: #000;
+  --btn2Color: rgba(0, 0, 0, 0.15);
+}
 .hover:hover {
-  color: #000 !important;
+  color: var(--btnColor) !important;
   /* font-style: italic; */
   border-color: transparent !important;
-  background: rgba(0, 0, 0, 0.15) !important;
+  background: var(--btn2Color) !important;
   transition: all .4s;
 }
 .disabledButton {
-  color: #000 !important;
+  color: var(--btnColor) !important;
   border-color: transparent !important;
-  background: rgba(0, 0, 0, 0.15) !important;
+  background: var(--btn2Color) !important;
 }
