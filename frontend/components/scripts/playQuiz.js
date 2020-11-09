@@ -51,9 +51,9 @@ const buttonArray = document.querySelectorAll(".btn-group > button");
 
 var index = 0;
 function displayNextQuesion() {
+    // needed because the function already get executed on the site load
     if (index > 0) {
       questionId = questionsArray[index-1].question_Id; 
-
     }
     if (index < questionsArray.length) {
         question.innerText = questionsArray[index].question;
@@ -81,12 +81,14 @@ function buttonDisable(boolean, selectedButton) {
 
   buttonArray.forEach(button => {
     button.disabled = boolean;
-
+  
     // changing Color
-    if (boolean) {
+    if (boolean) { // disable
       button.style.background = "grey";
-    } else {
+      button.classList.remove("hover");
+    } else { // enable
       button.style.background = buttonStandartColor;
+      button.classList.add("hover");
     }
   })
   // selected Option
@@ -99,14 +101,26 @@ function buttonDisable(boolean, selectedButton) {
   return
 };
 
+// Send selected Option to backend
+function sendSelectedOption(selectedOption) {
+  socket.send(JSON.stringify({
+    eventType: 'selectedOption', 
+    selectedOption: selectedOption, 
+    questionId: questionId
+  }));
+  console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
+};
+
 // Counter
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
 const timer = document.getElementById("timer");
-const maxTime = 3; // Change here the time
+const maxTime = 10; // Change here the time
 var currentTime = maxTime;
 
+// The Heart
 function countDown() {
+  // displaying the time
   if (currentTime >= 0) {
       if (currentTime == maxTime) {
           msg = "Time left: " + maxTime + " seconds";
@@ -117,32 +131,26 @@ function countDown() {
         seconds = Math.floor(currentTime % maxTime);
         msg = "Time left: " + seconds + " seconds";
         timer.innerHTML = msg;
-        currentTime--;}
+        currentTime--;
+      }
   }
-  else if (currentTime < 0){ // when timer reaches 0
+  // when timer reaches 0 do all the important stuff
+  else if (currentTime < 0){
       if (displayNextQuesion()){ 
         sendSelectedOption(selectedOption);
         buttonDisable(false);
+        // Reset
         currentTime = maxTime;
         message.innerText = "";
       } else { // when no question available
         sendSelectedOption(selectedOption);
+        // Dummy Page
         for (var i of quizContainer.children) {i.hidden = true;}
         finish.hidden = false;
         clearInterval(intervalSec);
       }
   }
   return;
-};
-
-// Send selected Option to backend
-function sendSelectedOption(selectedOption) {
-  socket.send(JSON.stringify({
-    eventType: 'selectedOption', 
-    selectedOption: selectedOption, 
-    questionId: questionId
-  }));
-  console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
 };
 
 // EventListeners
