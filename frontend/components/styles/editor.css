@@ -101,7 +101,7 @@ div.answer > input[type="radio"]
 
 #nextButton, #submitQuizButton {
   cursor: pointer;
-  width: 100%;
+  /* width: 100%; */
   background-color: black;
   color: white;
   font-size: 18px;
@@ -110,6 +110,7 @@ div.answer > input[type="radio"]
 #submitQuizButton {
   height: 50px;
   bottom: 3px;
+  width: 60%;
 }
 button {
   cursor: pointer;
@@ -126,10 +127,15 @@ button {
   background-color: darkgrey;
   cursor: not-allowed;
 }
-#cancelButton, #nextButton {
+
+.submitQuiz {
+  display: flex;
+}
+
+#cancelButton {
   cursor: pointer;
-  height: 30px;
-  width: 120px;
+  height: 50px;
+  width: 40%;
   background-color: black;
   color: white;
   font-size: 18px;
@@ -137,7 +143,7 @@ button {
   outline: none;
   border: 1px solid black;
   border-radius: 5px;
-  margin-bottom: 8px;
+  margin-right: 8px;
 }
 
 /* Media Query: iPhone (Vertical) */
