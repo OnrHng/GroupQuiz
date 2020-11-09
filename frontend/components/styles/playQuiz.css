@@ -69,3 +69,7 @@ label {
   font-size: 20px;
   color: red;
 }
+.disabledButton {
+  color: white !important;
+  background: "grey" !important;
+}

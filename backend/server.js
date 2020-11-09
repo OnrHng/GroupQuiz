@@ -127,7 +127,6 @@ wss.on('connection', function connection(ws) {
           //  post all question all clients.
           sendToAllClients(JSON.stringify({type: 'getAllQuestions', questions: results}));
       });
-
     }
   });
 
