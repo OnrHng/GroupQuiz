@@ -1,4 +1,4 @@
-var questions;
+var questionsArray;
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
@@ -14,7 +14,8 @@ socket.onmessage = function(event) {
 
   if(jsonObj.type === 'getAllQuestions') {
     console.log(jsonObj.questions);
-    questions = jsonObj.questions;
+    console.log(jsonObj);
+    questionsArray = jsonObj.questions;
   }
 };
 
@@ -45,41 +46,33 @@ window.onload = function() {
 // FUNCTIONS //
 
 // display next question
+var question = document.getElementById("question");
+const buttonArray = document.querySelectorAll(".btn-group > button");
+
 var index = 0;
 function displayNextQuesion() {  
-    if (index < questions.length) {
-        var question = document.getElementById("question");
-        var option1 = document.getElementById("option1");
-        var option2 = document.getElementById("option2");
-        var option3 = document.getElementById("option3");
-        var option4 = document.getElementById("option4");
+    if (index < questionsArray.length) {
+        question.innerText = questionsArray[index].question;
 
-        question.innerText = questions[index].question;
-        option1.innerText = questions[index].option1;
-        option2.innerText = questions[index].option2;
-        option3.innerText = questions[index].option3;
-        option4.innerText = questions[index].option4;
+        buttonArray[0].innerText = questionsArray[index].option1;
+        buttonArray[1].innerText = questionsArray[index].option2;
+        buttonArray[2].innerText = questionsArray[index].option3;
+        buttonArray[3].innerText = questionsArray[index].option4;
 
         index++;
         return true;
 
     } else {
-        console.log("stop")
         return false;
     }
 };
 
 // Button Disable
 const message = document.getElementById("message");
-const button1 = document.getElementById("option1");
-const button2 = document.getElementById("option2");
-const button3 = document.getElementById("option3");
-const button4 = document.getElementById("option4");
-const buttonArray = [button1, button2, button3, button4]
-const buttonStandartColor = button1.style.backgroundColor;
+const buttonStandartColor = buttonArray[0].style.backgroundColor;
 
-function buttonDisable(boolean) {
-  message.innerText = "please wait";
+function buttonDisable(boolean, selectedButton) {
+  message.innerText = "Please wait for next question!";
 
   buttonArray.forEach(item => {
     item.disabled = boolean
@@ -91,6 +84,11 @@ function buttonDisable(boolean) {
       item.style.background = buttonStandartColor;
     }
   })
+  // selected Option
+  if (selectedButton != null) {
+    selectedButton.style.background = buttonStandartColor;
+  }
+  return;
 };
 
 // Counter
@@ -121,7 +119,6 @@ function countDown() {
       } else {
         for (var i of quizContainer.children) {
           i.hidden = true;
-    
         }
         finish.hidden = false;
         clearInterval(intervalSec);
@@ -131,7 +128,4 @@ function countDown() {
 };
 
 // EventListeners
-buttonArray.forEach(item => {item.addEventListener('click', () => buttonDisable(true))});
-
-
-
+buttonArray.forEach(button => {button.addEventListener('click', () => buttonDisable(true, button))});

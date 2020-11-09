@@ -98,22 +98,20 @@ div.answer > input[type="radio"]
   width: 120px;
   height: 90px;
 }
-#nextButton , #submitQuizButton {
+
+#nextButton, #submitQuizButton {
   cursor: pointer;
   /* width: 100%; */
   background-color: black;
   color: white;
   font-size: 18px;
 }
-#nextButton:hover, #submitQuizButton {
-  filter: brightness(200%);
-}
+
 #submitQuizButton {
   height: 50px;
   bottom: 3px;
   width: 60%;
 }
-
 button {
   cursor: pointer;
   height: 30px;
@@ -124,10 +122,6 @@ button {
   outline: none;
   border: 1px solid black;
   border-radius: 5px;
-}
-
-button:active:hover {
-  filter: brightness(200%);
 }
 .disabled {
   background-color: darkgrey;
@@ -150,10 +144,6 @@ button:active:hover {
   border: 1px solid black;
   border-radius: 5px;
   margin-right: 8px;
-}
-
-#cancelButton:hover {
-  filter: brightness(200%);
 }
 
 /* Media Query: iPhone (Vertical) */
