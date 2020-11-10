@@ -14,14 +14,13 @@ socket.onmessage = function(event) {
   var jsonObj = JSON.parse(event.data);
 
   if(jsonObj.type === 'getAllQuestions') {
-    //console.log(jsonObj.questions);
-    //console.log(jsonObj);
     questionsArray = jsonObj.questions;
     console.log(questionsArray);
-    window.onload = function() {
-      displayNextQuesion();
-      intervalSec = setInterval(countDown, 1000);
-  }
+    
+    // displaying first question and starting counter
+    displayNextQuesion();
+    intervalSec = setInterval(countDown, 1000);
+ 
 }
 
   if (jsonObj.eventType === 'getCorrectOption') {
