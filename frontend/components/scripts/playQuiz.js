@@ -14,8 +14,23 @@ socket.onmessage = function(event) {
   var jsonObj = JSON.parse(event.data);
 
   if(jsonObj.type === 'getAllQuestions') {
+    //console.log(jsonObj.questions);
+    //console.log(jsonObj);
     questionsArray = jsonObj.questions;
     console.log(questionsArray);
+  }
+
+  if (jsonObj.eventType === 'getCorrectOption') {
+    
+    if (jsonObj.msg === 'correct'){
+      // change button background
+      // show the message answer is right 
+    } else if (jsonObj.msg === 'wrong'){
+      // change button background
+      // show the message answer is wrong
+
+    }
+
   }
 };
 

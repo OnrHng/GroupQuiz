@@ -118,8 +118,8 @@ wss.on('connection', function connection(ws) {
     }
     
     if (jsonObj.eventType === 'playQuiz') {
-      // sql query to get all questions
-      db.query("select * from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
+      // sql query to get all questions with answers without correct answer
+      db.query("select question_Id, question, option1, option2, option3, option4 from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
         [quizName], (err, results) => {
           if(err) throw err;
           //console.log(results);
@@ -127,7 +127,27 @@ wss.on('connection', function connection(ws) {
           //  post all question all clients.
           sendToAllClients(JSON.stringify({type: 'getAllQuestions', questions: results}));
       });
+
     }
+
+    // compare user answer with the correct answer
+    if (jsonObj.eventType === 'selectedOption') {
+      db.query("select correctAnswer from questions  where question_Id = ?",
+        [jsonObj.questionId], (err, result) => {
+          if(err) throw err;
+          console.log(result);
+
+          // send the just ' correct' msg if the user answer is right
+          // other send 'wrong' msg and also send correctAnswer
+          if (jsonObj.selectedOption === result) {
+            ws.send(JSON.stringify({type: 'getCorrectOption', msg: 'correct'}));
+          } else {
+            ws.send(JSON.stringify({type: 'getCorrectOption', msg: 'wrong', correctAnswer : result}));
+          }
+      });
+
+    }
+
   });
 
   ws.on('close', function close(number, reason) {
@@ -136,8 +156,6 @@ wss.on('connection', function connection(ws) {
 
 });
 
-// send the new joined Student names to teacher page via Ws
-// function sendNameTeacherOverview(name){}
 
 // we use this func in the future
 // send data all clients for Broadcast
