@@ -23,12 +23,14 @@ socket.onmessage = function(event) {
   if (jsonObj.eventType === 'getCorrectOption') {
     
     if (jsonObj.msg === 'correct'){
+      console.log('your answer is right');
       // change button background
       // show the message answer is right 
     } else if (jsonObj.msg === 'wrong'){
+      console.log('your answer is wrong');
       // change button background
       // show the message answer is wrong
-
+      // show also correct answer
     }
 
   }
@@ -109,7 +111,7 @@ function buttonDisable(boolean, selectedButton) {
   // selected Option
   if (selectedButton != null) {
     selectedButton.classList.remove("disabledButton");
-    selectedOption = selectedButton.id;
+    selectedOption = selectedButton.innerText;
   } else {
     selectedOption = null;
   }
@@ -130,7 +132,7 @@ function sendSelectedOption(selectedOption) {
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
 const timer = document.getElementById("timer");
-const maxTime = 10; // Change here the time
+const maxTime = 20; // Change here the time
 var currentTime = maxTime;
 
 // The Heart
