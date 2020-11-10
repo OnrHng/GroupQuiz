@@ -19,6 +19,7 @@ socket.onmessage = function(event) {
     questionsArray = jsonObj.questions;
     console.log(questionsArray);
     window.onload = function() {
+      console.log()
       displayNextQuesion();
       intervalSec = setInterval(countDown, 1000);
   }
@@ -112,7 +113,7 @@ function buttonDisable(boolean, selectedButton) {
   // selected Option
   if (selectedButton != null) {
     selectedButton.classList.remove("disabledButton");
-    selectedOption = selectedButton.innerText;
+    selectedOption = selectedButton.id;
   } else {
     selectedOption = null;
   }

@@ -139,6 +139,9 @@ wss.on('connection', function connection(ws) {
           // send the just ' correct' msg if the user answer is right
           // other send 'wrong' msg and also send correctAnswer
           if (jsonObj.selectedOption === result[0].correctAnswer) {
+            console.log(jsonObj.selectedOption);
+            console.log(result[0].correctAnswer);
+
             ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct'}));
           } else {
             ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result}));
