@@ -135,14 +135,13 @@ wss.on('connection', function connection(ws) {
       db.query("select correctAnswer from questions  where question_Id = ?",
         [jsonObj.questionId], (err, result) => {
           if(err) throw err;
-          console.log(result);
 
           // send the just ' correct' msg if the user answer is right
           // other send 'wrong' msg and also send correctAnswer
-          if (jsonObj.selectedOption === result) {
-            ws.send(JSON.stringify({type: 'getCorrectOption', msg: 'correct'}));
+          if (jsonObj.selectedOption === result[0].correctAnswer) {
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct'}));
           } else {
-            ws.send(JSON.stringify({type: 'getCorrectOption', msg: 'wrong', correctAnswer : result}));
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result}));
           }
       });
 
