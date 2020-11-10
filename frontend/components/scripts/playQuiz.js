@@ -18,7 +18,11 @@ socket.onmessage = function(event) {
     //console.log(jsonObj);
     questionsArray = jsonObj.questions;
     console.log(questionsArray);
+    window.onload = function() {
+      displayNextQuesion();
+      intervalSec = setInterval(countDown, 1000);
   }
+}
 
   if (jsonObj.eventType === 'getCorrectOption') {
     
@@ -55,10 +59,7 @@ socket.onerror = function(error) {
 
 var intervalSec;
 // Executed on Page Load
-window.onload = function() {
-    displayNextQuesion();
-    intervalSec = setInterval(countDown, 1000);
-}
+
 
 // FUNCTIONS //
 
