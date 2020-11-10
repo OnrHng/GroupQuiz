@@ -127,6 +127,7 @@ wss.on('connection', function connection(ws) {
           //  post all question all clients.
           sendToAllClients(JSON.stringify({type: 'getAllQuestions', questions: results}));
       });
+
     }
 
     // compare user answer with the correct answer
@@ -144,6 +145,7 @@ wss.on('connection', function connection(ws) {
             ws.send(JSON.stringify({type: 'getCorrectOption', msg: 'wrong', correctAnswer : result}));
           }
       });
+
     }
 
   });

@@ -1,4 +1,5 @@
 var questionsArray;
+var questionId;
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
@@ -16,6 +17,7 @@ socket.onmessage = function(event) {
     //console.log(jsonObj.questions);
     //console.log(jsonObj);
     questionsArray = jsonObj.questions;
+    console.log(questionsArray);
   }
 
   if (jsonObj.eventType === 'getCorrectOption') {
@@ -63,7 +65,11 @@ var question = document.getElementById("question");
 const buttonArray = document.querySelectorAll(".btn-group > button");
 
 var index = 0;
-function displayNextQuesion() {  
+function displayNextQuesion() {
+    // needed because the function already get executed on the site load
+    if (index > 0) {
+      questionId = questionsArray[index-1].question_Id; 
+    }
     if (index < questionsArray.length) {
         question.innerText = questionsArray[index].question;
 
@@ -83,36 +89,53 @@ function displayNextQuesion() {
 // Button Disable
 const message = document.getElementById("message");
 const buttonStandartColor = buttonArray[0].style.backgroundColor;
+var selectedOption = null;
 
 function buttonDisable(boolean, selectedButton) {
   message.innerText = "Please wait for next question!";
 
-  buttonArray.forEach(item => {
-    item.disabled = boolean
-
+  buttonArray.forEach(button => {
+    button.disabled = boolean;
+  
     // changing Color
-    if (boolean) {
-      item.style.background = "grey";
-      item.style.cursor='not-allowed';
-    } else {
-      item.style.background = buttonStandartColor;
+    if (boolean) { // disable
+      button.classList.add("disabledButton");
+      button.classList.remove("hover");
+    } else { // enable
+      button.classList.add("hover");
+      button.classList.remove("disabledButton");
     }
   })
   // selected Option
   if (selectedButton != null) {
-    selectedButton.style.background = buttonStandartColor;
+    selectedButton.classList.remove("disabledButton");
+    selectedOption = selectedButton.id;
+  } else {
+    selectedOption = null;
   }
-  return;
+  return
+};
+
+// Send selected Option to backend
+function sendSelectedOption(selectedOption) {
+  socket.send(JSON.stringify({
+    eventType: 'selectedOption', 
+    selectedOption: selectedOption, 
+    questionId: questionId
+  }));
+  console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
 };
 
 // Counter
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
 const timer = document.getElementById("timer");
-const maxTime = 30; // Change here the time
+const maxTime = 10; // Change here the time
 var currentTime = maxTime;
 
+// The Heart
 function countDown() {
+  // displaying the time
   if (currentTime >= 0) {
       if (currentTime == maxTime) {
           msg = "Time left: " + maxTime + " seconds";
@@ -123,17 +146,21 @@ function countDown() {
         seconds = Math.floor(currentTime % maxTime);
         msg = "Time left: " + seconds + " seconds";
         timer.innerHTML = msg;
-        currentTime--;}
+        currentTime--;
+      }
   }
+  // when timer reaches 0 do all the important stuff
   else if (currentTime < 0){
-      if (displayNextQuesion()){
+      if (displayNextQuesion()){ 
+        sendSelectedOption(selectedOption);
         buttonDisable(false);
+        // Reset
         currentTime = maxTime;
         message.innerText = "";
-      } else {
-        for (var i of quizContainer.children) {
-          i.hidden = true;
-        }
+      } else { // when no question available
+        sendSelectedOption(selectedOption);
+        // Dummy Page
+        for (var i of quizContainer.children) {i.hidden = true;}
         finish.hidden = false;
         clearInterval(intervalSec);
       }
@@ -142,4 +169,6 @@ function countDown() {
 };
 
 // EventListeners
-buttonArray.forEach(button => {button.addEventListener('click', () => buttonDisable(true, button))});
+buttonArray.forEach(button => {button.addEventListener('click', function() {
+  buttonDisable(true, button);
+})});

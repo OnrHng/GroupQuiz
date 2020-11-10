@@ -35,9 +35,6 @@ button {
   border-radius: 5px;
   float: inline-end 50%;
 }
-button:hover {
-  filter: brightness(200%);
-}
 label {
   width: 100%;
   height: 50px;
@@ -68,4 +65,21 @@ label {
 #timer {
   font-size: 20px;
   color: red;
+}
+/* buttons */
+:root {
+  --btnColor: #000;
+  --btn2Color: rgba(0, 0, 0, 0.15);
+}
+.hover:hover {
+  color: var(--btnColor) !important;
+  /* font-style: italic; */
+  border-color: transparent !important;
+  background: var(--btn2Color) !important;
+  transition: all .4s;
+}
+.disabledButton {
+  color: var(--btnColor) !important;
+  border-color: transparent !important;
+  background: var(--btn2Color) !important;
 }
