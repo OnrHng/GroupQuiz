@@ -13,9 +13,22 @@ socket.onmessage = function(event) {
   var jsonObj = JSON.parse(event.data);
 
   if(jsonObj.type === 'getAllQuestions') {
-    console.log(jsonObj.questions);
-    console.log(jsonObj);
+    //console.log(jsonObj.questions);
+    //console.log(jsonObj);
     questionsArray = jsonObj.questions;
+  }
+
+  if (jsonObj.eventType === 'getCorrectOption') {
+    
+    if (jsonObj.msg === 'correct'){
+      // change button background
+      // show the message answer is right 
+    } else if (jsonObj.msg === 'wrong'){
+      // change button background
+      // show the message answer is wrong
+
+    }
+
   }
 };
 
@@ -80,6 +93,7 @@ function buttonDisable(boolean, selectedButton) {
     // changing Color
     if (boolean) {
       item.style.background = "grey";
+      item.style.cursor='not-allowed';
     } else {
       item.style.background = buttonStandartColor;
     }
