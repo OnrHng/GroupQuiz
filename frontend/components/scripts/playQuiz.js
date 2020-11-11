@@ -24,20 +24,27 @@ socket.onmessage = function(event) {
 }
 
   if (jsonObj.eventType === 'getCorrectOption') {
-    
+    // var correctAnswer = jsonObj.correctAnswer;
     if (jsonObj.msg === 'correct'){
+      displayCorrectAnswer(jsonObj.correctAnswer);
+      console.log(jsonObj.correctAnswer);
       console.log('your answer is right');
       // change button background
       // show the message answer is right 
     } else if (jsonObj.msg === 'wrong'){
+      console.log(jsonObj.correctAnswer);
+      displayWrongAnswer(selectedOption);
+      displayCorrectAnswer(jsonObj.correctAnswer);
+      
+      console.log(jsonObj.correctAnswer);
       console.log('your answer is wrong');
       // change button background
       // show the message answer is wrong
       // show also correct answer
     }
-
   }
 };
+
 
 socket.onclose = function(event) {
   if (event.wasClean) {
@@ -68,10 +75,7 @@ const buttonArray = document.querySelectorAll(".btn-group > button");
 
 var index = 0;
 function displayNextQuesion() {
-    // needed because the function already get executed on the site load
-    if (index > 0) {
-      questionId = questionsArray[index-1].question_Id; 
-    }
+   
     if (index < questionsArray.length) {
         question.innerText = questionsArray[index].question;
 
@@ -88,9 +92,34 @@ function displayNextQuesion() {
     }
 };
 
+// Correct / False - Answer
+function displayCorrectAnswer(correctAnswer){
+  if (buttonArray[0].id === correctAnswer){
+    buttonArray[0].style.backgroundColor = "green";
+  }else if (buttonArray[1].id === correctAnswer){
+    buttonArray[1].style.backgroundColor = "green";
+  }else if (buttonArray[2].id === correctAnswer){
+    buttonArray[2].style.backgroundColor = "green";
+  }else if (buttonArray[3].id === correctAnswer){
+    buttonArray[3].style.backgroundColor = "green";
+  }
+};
+
+
+function displayWrongAnswer(selectedOption){
+  if (selectedOption === null){
+    return;
+  }else{
+    document.getElementById(selectedOption).style.backgroundColor = "red";
+  }
+};
+
+
+
+
 // Button Disable
 const message = document.getElementById("message");
-const buttonStandartColor = buttonArray[0].style.backgroundColor;
+const buttonStandartColor = "black";
 var selectedOption = null;
 
 function buttonDisable(boolean, selectedButton) {
@@ -132,13 +161,13 @@ function sendSelectedOption(selectedOption) {
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
 const timer = document.getElementById("timer");
-const maxTime = 20; // Change here the time
+const maxTime = 15; // Change here the time
 var currentTime = maxTime;
 
 // The Heart
 function countDown() {
   // displaying the time
-  if (currentTime >= 0) {
+  if (currentTime >= -10) {
       if (currentTime == maxTime) {
           msg = "Time left: " + maxTime + " seconds";
           timer.innerHTML = msg;
@@ -152,20 +181,28 @@ function countDown() {
       }
   }
   // when timer reaches 0 do all the important stuff
-  else if (currentTime < 0){
-      if (displayNextQuesion()){ 
-        sendSelectedOption(selectedOption);
-        buttonDisable(false);
-        // Reset
-        currentTime = maxTime;
-        message.innerText = "";
-      } else { // when no question available
-        sendSelectedOption(selectedOption);
-        // Dummy Page
-        for (var i of quizContainer.children) {i.hidden = true;}
-        finish.hidden = false;
-        clearInterval(intervalSec);
-      }
+  if (currentTime == 0){
+      console.log("display");
+      questionId = questionsArray[index-1].question_Id; 
+      sendSelectedOption(selectedOption);
+  }
+  else if (currentTime <= -10) {
+
+    buttonDisable(false);
+    buttonArray.forEach(x => x.style.background = "black");
+    currentTime = maxTime;
+    message.innerText = "";
+
+
+
+    if (displayNextQuesion()){ 
+    } else { // when no question available
+    sendSelectedOption(selectedOption);
+    // Dummy Page
+    for (var i of quizContainer.children) {i.hidden = true;}
+    finish.hidden = false;
+    clearInterval(intervalSec);
+  }
   }
   return;
 };

@@ -71,15 +71,17 @@ label {
   --btnColor: #000;
   --btn2Color: rgba(0, 0, 0, 0.15);
 }
+
 .hover:hover {
   color: var(--btnColor) !important;
   /* font-style: italic; */
   border-color: transparent !important;
   background: var(--btn2Color) !important;
   transition: all .4s;
+
 }
 .disabledButton {
   color: var(--btnColor) !important;
   border-color: transparent !important;
   background: var(--btn2Color) !important;
-}
+} 

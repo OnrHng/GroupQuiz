@@ -142,9 +142,9 @@ wss.on('connection', function connection(ws) {
             console.log(jsonObj.selectedOption);
             console.log(result[0].correctAnswer);
 
-            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct'}));
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct', correctAnswer : result[0].correctAnswer}));
           } else {
-            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result}));
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result[0].correctAnswer}));
           }
       });
 
