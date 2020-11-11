@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" type="image/png" href="/assets/favicon.png">
   <link rel="stylesheet" href="../styles/quizStart.css">
+  <link rel="stylesheet" href="../styles/hoverEffect.css">
   <title>Start Quiz</title>
-
 </head>
 <body>
   
   <div class="quiz_start-container">
     <!--  Quiz nama should be get from Quiz Qverview -->
-    <h1>Welcome to Java Quiz</h1>
+    <h1 id="quizName">Welcome to </h1> 
     <h2>Participation Code</h2>
     <h2 id="h2"></h2>
-    <button id="startNow" onclick="startNow()">Start Now</button> 
+    <button id="startNow">Start Now</button> 
     <h3>Waiting for other praticipants to join..</h3>
     <div id="studentsNames"></div>
   </div>

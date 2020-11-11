@@ -20,8 +20,8 @@ input {
 }
 button {
   cursor: pointer;
-  height: 40px;
-  width: 90px;
+  height: 80px;
+  width: 160px;
   background-color: black;
   color: white;
   font-size: 20px;
@@ -32,6 +32,8 @@ button {
   border-radius: 5px;
   align-items: center;
   text-align: center;
+  border-radius: 5px;
+  float: inline-end 50%;
 }
 label {
   width: 100%;
@@ -41,7 +43,11 @@ label {
   text-align: center;
   font-size: larger;
   }
-.joinquiz-container {
+.btn-group{
+  vertical-align: middle;
+  display:inline-flexbox
+  }  
+.playquiz-container {
   width: 480px;
   height: 630px;
   background: rgba(255, 255, 255, 0.8);
@@ -53,12 +59,34 @@ label {
   padding: 7px;
   box-sizing: border-box;
 }
-
 #pageDiv {
   align-items: center;
 }
-
-#message {
+#timer {
   font-size: 20px;
   color: red;
+}
+/* buttons */
+:root {
+  --btnColor: #000;
+  --btn2Color: rgba(0, 0, 0, 0.15);
+}
+
+.hover:hover {
+  /* color: var(--btnColor) !important; */
+  border-color: transparent ;
+  background-color: var(--btn2Color) ;
+  transition: all .4s;
+
+}
+.disabledButton {
+  /* color: var(--btnColor) !important; */
+  border-color: transparent ;
+  background-color: var(--btn2Color);
+}
+.correct {
+  background-color: green;
+} 
+.wrong {
+  background-color: red;
 }

@@ -4,6 +4,8 @@ const app = express();
 const mysql = require("mysql");
 const dbconfig = require("./configDb.js");
 const praticipationCode = require("./components/quizCode.js");
+const WebSocket = require('ws');
+
 let studentsNames = '';
 
 // parse HTTP POST Data 
@@ -15,14 +17,24 @@ app.use(bodyParser.json()); // accept json data
 app.use(express.static('../frontend'));
 
 
-connection = mysql.createConnection(dbconfig.dbSettings);
-connection.connect((err) => {
+db = mysql.createConnection(dbconfig.dbSettings);
+db.connect((err) => {
   if (err) {
     console.log('Error connecting to DB: change connection settings!');
   } else {
     console.log('Connection established!');
   }
 });
+
+// Running Server on PORT
+const PORT = 3000;
+var httpServer = app.listen(PORT, () => {
+  console.log(`HTTP server listening at http://localhost:${PORT}`);
+});
+
+// Websocket server
+const wss = new WebSocket.Server({ server : httpServer });
+
 
 function escapeHtml(unsafe) {
   return unsafe
@@ -35,7 +47,7 @@ function escapeHtml(unsafe) {
 
 // submit quiz name on DB
 app.post('/submitQuizName', (req, res) => {
-  connection.query("INSERT INTO quiz (quiz_name) values (?)", escapeHtml(req.body.quizName),
+  db.query("INSERT INTO quiz (quiz_name) values (?)", escapeHtml(req.body.quizName),
     (err, result) => {
       if (err) throw err;
       console.log("created a new quiz name with id ", result.insertId);
@@ -46,9 +58,10 @@ app.post('/submitQuizName', (req, res) => {
 
 // Post Questions on DB
 app.post('/postQuestions', (req, res) => {
-  connection.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)",
+  db.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)",
     [req.body.quizId, req.body.question, req.body.option1, req.body.option2,
     req.body.option3, req.body.option4, req.body.correctAnswer],
+
     (err, result) => {
       if (err) throw err;
       console.log("created a new question created with id ", result.insertId);
@@ -60,25 +73,89 @@ app.post('/postQuestions', (req, res) => {
 
 // select all quizes
 app.get("/quiz", (req, res) => {
-  connection.query('SELECT * FROM quiz', (err, rows) => {
-    if (err) throw err;
-    console.log('Data received from Db:');
-    console.log(rows);
-    res.json(rows);
+  db.query('SELECT * FROM quiz', (err, rows) => {
+      if(err) throw err;
+      res.json(rows);
   });
+});
+
+// delete one quiz
+app.delete('/deleteQuiz', (req, res) => {
+  connection.query("delete from quiz where quiz_Id = ? ",[req.body.quizId],
+    (err, result) => {
+      if(err) throw err;
+      if (result.affectedRows == 0) {
+        res.sendStatus(404);
+      } else {
+        res.json({"delete": result.affectedRows});
+      }
+    }
+  );
+});
+
+// Send Quiz Name from Play Button
+var quizName;
+app.post("/quizStart", function(req, res){
+  quizName = req.body.quizName;
+  res.json({quizName});
 });
 
 // generate Code and send the code to frontend
 app.get('/quizStart', function(req, res) {
-  res.json(
-    {praticipationCode, studentsNames
-  });
+  res.json({praticipationCode, quizName});
 });
 
-// get student name frontend and send it to quiz start html´
-app.post("/getParticipantName", function(req, res){
-  studentsNames = studentsNames + " " + req.body.participationName;
-  res.sendStatus(200);
+//websocket methods
+wss.on('connection', function connection(ws) {
+
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+    var jsonObj = JSON.parse(message);
+
+    if (jsonObj.eventType === 'joinNewStudent') {
+      studentsNames = studentsNames + " " + jsonObj.data.participationName;
+      sendToAllClients(JSON.stringify({type: 'getNewName', names: studentsNames}));
+    }
+    
+    if (jsonObj.eventType === 'playQuiz') {
+      // sql query to get all questions with answers without correct answer
+      db.query("select question_Id, question, option1, option2, option3, option4 from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
+        [quizName], (err, results) => {
+          if(err) throw err;
+          //console.log(results);
+
+          //  post all question all clients.
+          sendToAllClients(JSON.stringify({type: 'getAllQuestions', questions: results}));
+      });
+
+    }
+
+    // compare user answer with the correct answer
+    if (jsonObj.eventType === 'selectedOption') {
+      db.query("select correctAnswer from questions  where question_Id = ?",
+        [jsonObj.questionId], (err, result) => {
+          if(err) throw err;
+
+          // send the just ' correct' msg if the user answer is right
+          // other send 'wrong' msg and also send correctAnswer
+          if (jsonObj.selectedOption === result[0].correctAnswer) {
+            console.log(jsonObj.selectedOption);
+            console.log(result[0].correctAnswer);
+
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct', correctAnswer : result[0].correctAnswer}));
+          } else {
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result[0].correctAnswer}));
+          }
+      });
+
+    }
+
+  });
+
+  ws.on('close', function close(number, reason) {
+    console.log('close, number: ' + number + " reason: " + reason);
+  });
+
 });
 // delete one quiz
 app.delete("/removeDB/:quiz", (req, res) => {
@@ -96,8 +173,10 @@ app.delete("/removeDB/:quiz", (req, res) => {
 });
 
 
-// http://localhost:3000
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`Example app listening at http://localhost:${PORT}`);
-});
+// we use this func in the future
+// send data all clients for Broadcast
+function sendToAllClients(msg) {
+  wss.clients.forEach(function(client) {
+      client.send(msg);
+  });
+}

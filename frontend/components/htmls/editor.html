@@ -6,12 +6,13 @@
   <link rel="icon" type="image/png" href="../../assets/favicon.png"> 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
   <link rel="stylesheet" href="../styles/editor.css">
-  
+  <link rel="stylesheet" href="../styles/custom-confirm.css">
+  <link rel="stylesheet" href="../styles/hoverEffect.css">
   <title>Editor</title>
 </head>
 <body>
   <div class="editor-container" id="editor-container">
-    <div class="quetion-cosntainer" id="quetion-cosntainer">
+    <div>
     <!-- Question Title -->
     <h1>Quiz Editor</h1>
     <form id="formQuizTitle">
@@ -20,13 +21,13 @@
         <input type="text" name="quizName" id="quizName" placeholder="Type Quiz Name" required>
       </div>
     </form>
-    <form id="formQuestion">
+    <form id="formQuestion" action="javascript:displayNextQuestion();">
     <!-- Questions -->
-    <div class="questionContainer" id="questionContainer">
-      <fieldset style="margin-top: 8px;">
+    <div class="question-container">
+      <fieldset class style="margin-top: 8px;">
         <legend>Define Question</legend>
         <label for="question">Question</label>
-        <input type="text" name="question" id="question" placeholder="Type Question" required>
+        <input type="text" name="question" placeholder="Type Question" required>
         <!-- Answers -->
         <div class="answers-container">
           <div class="answers-title">
@@ -35,39 +36,46 @@
           </div>
           <div class="answers-wraper">
             <div class="answer">
-              <input type="text" name="A" id="answerA" placeholder="Type Answer A" required>
-              <input type="radio" name="correct0" id="correctA" checked>
+              <input type="text" name="option1" placeholder="Type Answer A" required >
+              <input type="radio" name="correct0"checked>
             </div>
             <div class="answer">
-              <input type="text" name="B" id="answerB" placeholder="Type Answer B" required>
-              <input type="radio" name="correct0" id="correctB">
+              <input type="text" name="option2" placeholder="Type Answer B" required>
+              <input type="radio" name="correct0">
             </div>
             <div class="answer">
-              <input type="text" name="A" id="answerC" placeholder="Type Answer C" required>
-              <input type="radio" name="correct0" id="correctC">
+              <input type="text" name="option3" placeholder="Type Answer C" required>
+              <input type="radio" name="correct0">
             </div>
             <div class="answer">
-              <input type="text" name="A" id="answerD" placeholder="Type Answer D" required>
-              <input type="radio" name="correct0" id="correctD">
+              <input type="text" name="option4" placeholder="Type Answer D" required>
+              <input type="radio" name="correct0">
             </div>
           </div>
         </div>
       </fieldset>
-     
     </div>
     </form>
-    </div>
-   
-    <p id="questionNumber"></p>
-    <div class="nextQuestion">
-      <input type="submit" value="Add" id="nextButton" onclick="displayNextQuestion()">
-    </div>
+    <br><br>
+    <input type="button" value="Add" id="nextButton" onclick="displayNextQuestion()"><br><br>
     <div class="submitQuiz">
-      <input type="button" value="Cancel" id="submitQuizButton" onclick="cancel()">
+      <input type="button" value="Cancel" id="cancelButton">
       <input type="button" value="Save" id="submitQuizButton" onclick="submitQuiz()">
     </div>
   </div>
-  <!-- Script -->
+
+<!-- Scripts -->
   <script src="../scripts/editor.js"></script>
+  <script src="../scripts/custom-confirm.js"></script>
+
+  <!-- when cancelButton pressed -->
+  <script>
+    CustomConfirm('#cancelButton', function (confirmed, element) {
+  if (confirmed) {
+      window.location.href = "../htmls/quiz.html";
+  } 
+});
+  </script>
+
 </body>
 </html>

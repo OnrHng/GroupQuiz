@@ -2,25 +2,24 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join</title>
     <link rel="icon" type="image/png" href="../../assets/favicon.png"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../styles/joinQuiz.css">
+    <link rel="stylesheet" href="../styles/hoverEffect.css">
   </head>
   <body>
     <div class="joinquiz-container" >
       <h1>Join A Quiz</h1>
         <div class="joinQuiz" id='pageDiv'>
           <label for="" id="joinCode">Join Code</label>
-          <input type="text" id="givenCode" name="joinCode" required><br><br><br>
+          <input type="text" id="givenCode" name="joinCode" required><br><br>
           <label for="" id="name">Name </label>
-          <input type="text" id="studentName" name="joinCode" required> <br><br>
+          <input type="text" id="studentName" name="joinCode" required><br><br>
           <button type="button" id="join">JOIN</button>
+          <div><h4 id="message"></h4></div>
         </div>
-      <div>
-        <h4 id="message"></h4>
-      </div>
     </div>
-
     <!-- Scripts -->
     <script src="../scripts/joinQuiz.js"></script>
 </body>
