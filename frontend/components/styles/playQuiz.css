@@ -73,15 +73,20 @@ label {
 }
 
 .hover:hover {
-  color: var(--btnColor) !important;
-  /* font-style: italic; */
-  border-color: transparent !important;
-  background: var(--btn2Color) !important;
+  /* color: var(--btnColor) !important; */
+  border-color: transparent ;
+  background-color: var(--btn2Color) ;
   transition: all .4s;
 
 }
 .disabledButton {
-  color: var(--btnColor) !important;
-  border-color: transparent !important;
-  background: var(--btn2Color) !important;
+  /* color: var(--btnColor) !important; */
+  border-color: transparent ;
+  background-color: var(--btn2Color);
+}
+.correct {
+  background-color: green;
 } 
+.wrong {
+  background-color: red;
+}

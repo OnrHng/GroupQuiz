@@ -27,16 +27,13 @@ socket.onmessage = function(event) {
     // var correctAnswer = jsonObj.correctAnswer;
     if (jsonObj.msg === 'correct'){
       displayCorrectAnswer(jsonObj.correctAnswer);
-      console.log(jsonObj.correctAnswer);
       console.log('your answer is right');
       // change button background
       // show the message answer is right 
     } else if (jsonObj.msg === 'wrong'){
-      console.log(jsonObj.correctAnswer);
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
       
-      console.log(jsonObj.correctAnswer);
       console.log('your answer is wrong');
       // change button background
       // show the message answer is wrong
@@ -58,9 +55,6 @@ socket.onclose = function(event) {
 socket.onerror = function(error) {
   console.log(`[error] ${error.message}`);
 };
-
-
-
 
 
 var intervalSec;
@@ -95,26 +89,23 @@ function displayNextQuesion() {
 // Correct / False - Answer
 function displayCorrectAnswer(correctAnswer){
   if (buttonArray[0].id === correctAnswer){
-    buttonArray[0].style.backgroundColor = "green";
+    buttonArray[0].classList.add('correct');
   }else if (buttonArray[1].id === correctAnswer){
-    buttonArray[1].style.backgroundColor = "green";
+    buttonArray[1].classList.add('correct');
   }else if (buttonArray[2].id === correctAnswer){
-    buttonArray[2].style.backgroundColor = "green";
+    buttonArray[2].classList.add('correct');
   }else if (buttonArray[3].id === correctAnswer){
-    buttonArray[3].style.backgroundColor = "green";
+    buttonArray[3].classList.add('correct');
   }
 };
-
 
 function displayWrongAnswer(selectedOption){
   if (selectedOption === null){
     return;
   }else{
-    document.getElementById(selectedOption).style.backgroundColor = "red";
+    document.getElementById(selectedOption).classList.add('wrong');
   }
 };
-
-
 
 
 // Button Disable
@@ -126,6 +117,7 @@ function buttonDisable(boolean, selectedButton) {
   message.innerText = "Please wait for next question!";
 
   buttonArray.forEach(button => {
+    button.className = '';
     button.disabled = boolean;
   
     // changing Color
@@ -161,13 +153,13 @@ function sendSelectedOption(selectedOption) {
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
 const timer = document.getElementById("timer");
-const maxTime = 15; // Change here the time
+const maxTime = 10; // Change here the time
 var currentTime = maxTime;
 
 // The Heart
 function countDown() {
   // displaying the time
-  if (currentTime >= -10) {
+  if (currentTime >= -5) {
       if (currentTime == maxTime) {
           msg = "Time left: " + maxTime + " seconds";
           timer.innerHTML = msg;
@@ -186,14 +178,10 @@ function countDown() {
       questionId = questionsArray[index-1].question_Id; 
       sendSelectedOption(selectedOption);
   }
-  else if (currentTime <= -10) {
-
+  else if (currentTime < -5) {
     buttonDisable(false);
-    buttonArray.forEach(x => x.style.background = "black");
     currentTime = maxTime;
     message.innerText = "";
-
-
 
     if (displayNextQuesion()){ 
     } else { // when no question available
