@@ -12,7 +12,7 @@ socket.onopen = function(e) {
 
 socket.onmessage = function(event) {
   var jsonObj = JSON.parse(event.data);
-  if(jsonObj.type === 'getAllQuestions') {
+  if(jsonObj.type === 'goplayQuiz') {
     // go playQuiz page if student login in
     if (pageDiv.textContent.startsWith('Please wait for')) {
       window.location.href = "../htmls/playQuiz.html";

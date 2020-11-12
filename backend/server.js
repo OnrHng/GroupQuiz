@@ -134,7 +134,7 @@ wss.on('connection', function connection(ws) {
           //console.log(results);
 
           //  post all question all clients.
-          sendToAllClients(JSON.stringify({type: 'getAllQuestions', questions: results}));
+          sendToAllClients(JSON.stringify({type: 'goplayQuiz', questions: results}));
       });
 
     }

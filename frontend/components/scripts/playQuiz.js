@@ -11,8 +11,7 @@ intervalSec = setInterval(countDown, 1000);
 var socket = new WebSocket("ws://localhost:3000/");
 socket.onopen = function(e) {
   console.log("[open] Connection established");
-  socket.send(JSON.stringify({eventType: 'playQuiz'}));
-
+  socket.send(JSON.stringify({eventType: 'getAllQuestions'}));
 };
 
 socket.onmessage = function(event) {
