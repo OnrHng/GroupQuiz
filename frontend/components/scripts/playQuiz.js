@@ -3,9 +3,9 @@ const statisticsArray = document.querySelectorAll("p");
 var questionsArray;
 var questionId;
 var intervalSec;
+intervalSec = setInterval(countDown, 1000);
 
 
-console.log(buttonArray);
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
@@ -21,15 +21,15 @@ socket.onmessage = function(event) {
 
   if(jsonObj.type === 'getAllQuestions') {
     questionsArray = jsonObj.questions;
+    console.log("getAllQuestions");
     console.log(questionsArray);
     
-    // displaying first question and starting counter
     displayNextQuesion();
-    intervalSec = setInterval(countDown, 1000);
- 
+    // displaying first question and starting counter
+    
 }
 
-  if (jsonObj.eventType === 'getCorrectOption') {
+  if (jsonObj.eventType === 'getStatistic') {
     if (jsonObj.msg === 'correct'){
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'wrong'){
@@ -83,7 +83,7 @@ function displayNextQuesion() {
         buttonArray[1].innerText = questionsArray[index].option2;
         buttonArray[2].innerText = questionsArray[index].option3;
         buttonArray[3].innerText = questionsArray[index].option4;
-
+        console.log(index);
         index++;
         return true;
 
@@ -147,9 +147,15 @@ function sendSelectedOption(selectedOption) {
   console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
 };
 
+function getStatistic() {
+  socket.send(JSON.stringify({
+    eventType: 'getStatistic',
+  }));
+}
+
 // Counter
-const maxTime = 10; // How long questions should be displayd
-const resultTime = 5; // How long question results should be displayd
+const maxTime = 15; // How long questions should be displayd
+const resultTime = 10; // How long question results should be displayd
 const timer = document.getElementById("timer");
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
@@ -164,9 +170,7 @@ function countDown() {
   // when timer reaches -1
   if (currentTime == 0){ // Display correct / false - Answer and show answer count
     timer.hidden = true;
-
-    questionId = questionsArray[index-1].question_Id;
-    sendSelectedOption(selectedOption);
+    getStatistic();
   }
   else if (currentTime == -resultTime) { // Display next question
     // Reset
@@ -197,4 +201,6 @@ function countDown() {
 // EventListeners
 buttonArray.forEach(button => {button.addEventListener('click', function() {
   buttonDisable(true, button);
+  questionId = questionsArray[index-1].question_Id;
+  sendSelectedOption(selectedOption);
 })});

@@ -95,6 +95,15 @@ app.delete('/deleteQuiz', (req, res) => {
 
 // Send Quiz Name from Play Button
 var quizName;
+// e.g. object for statistic
+var correctAnswer;
+var optionsStatistics = {
+  option1: 0,
+  option2: 0,
+  option3: 0,
+  option4: 0
+};
+
 app.post("/quizStart", function(req, res){
   quizName = req.body.quizName;
   res.json({quizName});
@@ -130,37 +139,38 @@ wss.on('connection', function connection(ws) {
 
     }
 
-    // e.g. object for statistic
-    var optionsStatistics = {
-      option1: 1,
-      option2: 2,
-      option3: 3,
-      option4: 4
-
-    };
-
     // compare user answer with the correct answer
     if (jsonObj.eventType === 'selectedOption') {
       db.query("select correctAnswer from questions  where question_Id = ?",
         [jsonObj.questionId], (err, result) => {
           if(err) throw err;
-          
-          // count the options statistic in the object
 
-          // send the just ' correct' msg if the user answer is right
-          // other send 'wrong' msg and also send correctAnswer
-          if (jsonObj.selectedOption === result[0].correctAnswer) {
-            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct', correctAnswer : result[0].correctAnswer, optionsStatistics: optionsStatistics}));
-          } else {
-            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result[0].correctAnswer, optionsStatistics:optionsStatistics}));
+          correctAnswer = result[0].correctAnswer;
+          console.log(correctAnswer);
+    
+          if (jsonObj.selectedOption === "option1") {
+            optionsStatistics.option1 += 1;
+          } else if (jsonObj.selectedOption === "option2") {
+            optionsStatistics.option2 += 1; 
+          } else if (jsonObj.selectedOption === "option3") {
+            optionsStatistics.option3 += 1;
+          } else if (jsonObj.selectedOption === "option4") {
+            optionsStatistics.option4 += 1;
           }
 
+          // for (var option in optionsStatistics) {
+          //   optionsStatistics[option] = 0;
+          // }
           
       });
     }
 
     if (jsonObj.eventType === 'getStatistic') {
-      sendToAllClients(JSON.stringify({eventType: 'displayStatistic', optionsStatistics: optionsStatistics}));
+      if (jsonObj.selectedOption === correctAnswer) {
+        ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'correct', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
+      } else {
+        ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'wrong', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
+      }
     } 
 
   });
@@ -168,7 +178,6 @@ wss.on('connection', function connection(ws) {
   ws.on('close', function close(number, reason) {
     console.log('close, number: ' + number + " reason: " + reason);
   });
-
 });
 
 
