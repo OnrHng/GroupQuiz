@@ -8,19 +8,33 @@
     <link rel="stylesheet" type="text/css" href="../styles/playQuiz.css">
   </head>
   <body>
-    <div class="playquiz-container">
-      <h1 id="question">Question 1</h1> <br> <br>
+    <!--  to original project file -->
+    <div class="playquiz-container" id="container">
+      <h1 id="question">Question 1</h1>
         <div class="btn-group" id='pageDiv'>
-          <button id="option1"  class="button hover">Option 1</button>      <button id="option2" class="button hover">Option 2</button> <br> <br> <br>
-          <!--Kannst du bitte helfen diese buttons nich getrent zu machen-->
-          <button id="option3" class="button hover">Option 3</button>     <button id="option4" class="button hover">Option 4</button> <br> <br> <br>
+          <div class="wraper">
+            <button id="option1" class="btn hover">Option 1</button>      
+            <p class="statistic" id="statistic1"></p>
+          </div>
+          <div class="wraper">
+            <button id="option2" class="btn hover">Option 2</button> 
+            <p class="statistic" id="statistic2"></p>
+          </div>
+          <div class="wraper">
+            <button id="option3" class="btn hover">Option 3</button>     
+            <p class="statistic" id="statistic3"></p>
+          </div>
+          <div class="wraper">
+            <button id="option4" class="btn hover">Option 4</button> 
+            <p class="statistic" id="statistic4"></p>
+          </div>
         </div>
-          <div>
-            <h4 id="timer"></h4> <!--This is place for 30 seconds timer-->
-            <h3 id="message"></h4>
+        <div>
+          <h4 id="timer"></h4> <!--This is place for 30 seconds timer-->
+          <h3 id="message"></h4>
         </div>
-      <h1 id="Finish" hidden>Finish! Answered all questions!</h1>
-    </div>
+        <h1 id="Finish" hidden>Finish! Answered all questions!</h1>
+      </div>
     <script src="../scripts/playQuiz.js"></script>
 </body>
 </html>
