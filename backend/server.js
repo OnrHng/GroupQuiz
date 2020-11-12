@@ -94,7 +94,7 @@ app.delete('/deleteQuiz', (req, res) => {
 });
 
 // Send Quiz Name from Play Button
-var quizName;
+var quizName = "test_correct_answer";
 // e.g. object for statistic
 var correctAnswer;
 var optionsStatistics = {
@@ -127,16 +127,19 @@ wss.on('connection', function connection(ws) {
     }
     
     if (jsonObj.eventType === 'playQuiz') {
+        sendToAllClients(JSON.stringify({type: 'goplayQuiz'}));
+    };
+    if (jsonObj.eventType === 'getAllQuestions') {
       // sql query to get all questions with answers without correct answer
       db.query("select question_Id, question, option1, option2, option3, option4 from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
         [quizName], (err, results) => {
           if(err) throw err;
-          //console.log(results);
+          console.log(results);
+          console.log(quizName);
 
           //  post all question all clients.
-          sendToAllClients(JSON.stringify({type: 'goplayQuiz', questions: results}));
+          ws.send(JSON.stringify({type: 'getAllQuestions', questions: results}));
       });
-
     }
 
     // compare user answer with the correct answer
