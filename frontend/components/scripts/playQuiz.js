@@ -1,5 +1,7 @@
+const buttonArray = Array.from(document.querySelectorAll(".btn-group > button"));
 var questionsArray;
 var questionId;
+var intervalSec;
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
@@ -27,21 +29,12 @@ socket.onmessage = function(event) {
     // var correctAnswer = jsonObj.correctAnswer;
     if (jsonObj.msg === 'correct'){
       displayCorrectAnswer(jsonObj.correctAnswer);
-      console.log('your answer is right');
-      // change button background
-      // show the message answer is right 
     } else if (jsonObj.msg === 'wrong'){
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
-      
-      console.log('your answer is wrong');
-      // change button background
-      // show the message answer is wrong
-      // show also correct answer
     }
   }
 };
-
 
 socket.onclose = function(event) {
   if (event.wasClean) {
@@ -57,19 +50,17 @@ socket.onerror = function(error) {
 };
 
 
-var intervalSec;
-// Executed on Page Load
+
 
 
 // FUNCTIONS //
 
 // display next question
 var question = document.getElementById("question");
-const buttonArray = document.querySelectorAll(".btn-group > button");
+
 
 var index = 0;
 function displayNextQuesion() {
-   
     if (index < questionsArray.length) {
         question.innerText = questionsArray[index].question;
 
@@ -87,22 +78,14 @@ function displayNextQuesion() {
 };
 
 // Correct / False - Answer
-function displayCorrectAnswer(correctAnswer){
-  if (buttonArray[0].id === correctAnswer){
-    buttonArray[0].classList.add('correct');
-  }else if (buttonArray[1].id === correctAnswer){
-    buttonArray[1].classList.add('correct');
-  }else if (buttonArray[2].id === correctAnswer){
-    buttonArray[2].classList.add('correct');
-  }else if (buttonArray[3].id === correctAnswer){
-    buttonArray[3].classList.add('correct');
-  }
-};
+function displayCorrectAnswer(correctAnswer) {
+  buttonArray.filter(x => x.id === correctAnswer)[0].classList.add('correct');
+}
 
-function displayWrongAnswer(selectedOption){
-  if (selectedOption === null){
+function displayWrongAnswer(selectedOption) {
+  if (selectedOption === null) {
     return;
-  }else{
+  } else {
     document.getElementById(selectedOption).classList.add('wrong');
   }
 };
@@ -114,8 +97,6 @@ const buttonStandartColor = "black";
 var selectedOption = null;
 
 function buttonDisable(boolean, selectedButton) {
-  message.innerText = "Please wait for next question!";
-
   buttonArray.forEach(button => {
     button.className = '';
     button.disabled = boolean;
@@ -165,10 +146,10 @@ function countDown() {
   }
   // when timer reaches -1
   if (currentTime == -1){ // Display correct / false - Answer and show answer count
-    console.log("display");
-    questionId = questionsArray[index-1].question_Id; 
-    sendSelectedOption(selectedOption);
     timer.hidden = true;
+
+    questionId = questionsArray[index-1].question_Id;
+    sendSelectedOption(selectedOption);
   }
   else if (currentTime == -resultTime) { // Display next question
     // Reset
@@ -192,5 +173,6 @@ function countDown() {
 
 // EventListeners
 buttonArray.forEach(button => {button.addEventListener('click', function() {
+  message.innerText = "Please wait for next question!";
   buttonDisable(true, button);
 })});
