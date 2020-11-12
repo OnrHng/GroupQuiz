@@ -1,5 +1,9 @@
 var questionsArray;
 var questionId;
+const buttonArray = document.querySelectorAll("button");
+const statisticsArray = document.querySelectorAll("p");
+
+console.log(buttonArray);
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
@@ -24,21 +28,30 @@ socket.onmessage = function(event) {
 }
 
   if (jsonObj.eventType === 'getCorrectOption') {
-    // var correctAnswer = jsonObj.correctAnswer;
     if (jsonObj.msg === 'correct'){
       displayCorrectAnswer(jsonObj.correctAnswer);
       console.log('your answer is right');
-      // change button background
-      // show the message answer is right 
+    
     } else if (jsonObj.msg === 'wrong'){
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
       
       console.log('your answer is wrong');
-      // change button background
-      // show the message answer is wrong
-      // show also correct answer
     }
+
+    // display Statistic
+    for(const statistic in jsonObj.optionsStatistics){
+      //  console.log(statistic);
+       if (statistic === 'option1') {
+         document.getElementById('statistic1').innerText = jsonObj.optionsStatistics[statistic];
+       } else if (statistic === 'option2') {
+         document.getElementById('statistic2').innerText = jsonObj.optionsStatistics[statistic];
+       } else if (statistic === 'option3') {
+         document.getElementById('statistic3').innerText = jsonObj.optionsStatistics[statistic];
+       } else if (statistic === 'option4') {
+         document.getElementById('statistic4').innerText = jsonObj.optionsStatistics[statistic];
+       }
+     }
   }
 };
 
@@ -57,7 +70,6 @@ socket.onerror = function(error) {
 };
 
 
-var intervalSec;
 // Executed on Page Load
 
 
@@ -65,7 +77,6 @@ var intervalSec;
 
 // display next question
 var question = document.getElementById("question");
-const buttonArray = document.querySelectorAll(".btn-group > button");
 
 var index = 0;
 function displayNextQuesion() {
@@ -92,7 +103,7 @@ function displayCorrectAnswer(correctAnswer){
     buttonArray[0].classList.add('correct');
   }else if (buttonArray[1].id === correctAnswer){
     buttonArray[1].classList.add('correct');
-  }else if (buttonArray[2].id === correctAnswer){
+  }else if ( buttonArray[2].id === correctAnswer){
     buttonArray[2].classList.add('correct');
   }else if (buttonArray[3].id === correctAnswer){
     buttonArray[3].classList.add('correct');
@@ -182,15 +193,20 @@ function countDown() {
     buttonDisable(false);
     currentTime = maxTime;
     message.innerText = "";
+    for(const element of statisticsArray){
+      element.innerText = '';
+    }
 
     if (displayNextQuesion()){ 
     } else { // when no question available
     sendSelectedOption(selectedOption);
     // Dummy Page
     for (var i of quizContainer.children) {i.hidden = true;}
+    const wraperBtn = document.querySelectorAll('.wraper');
+    for (var element of wraperBtn) {element.style.display = "none";}
     finish.hidden = false;
     clearInterval(intervalSec);
-  }
+    }
   }
   return;
 };
