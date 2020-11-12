@@ -79,7 +79,7 @@ function displayNextQuesion() {
 
 // Correct / False - Answer
 function displayCorrectAnswer(correctAnswer) {
-  buttonArray.filter(x => x.id === correctAnswer)[0].classList.add('correct');
+  Array.from(buttonArray).filter(x => x.id === correctAnswer)[0].classList.add('correct');
 }
 
 function displayWrongAnswer(selectedOption) {
