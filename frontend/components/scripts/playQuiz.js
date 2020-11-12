@@ -161,35 +161,28 @@ function sendSelectedOption(selectedOption) {
 };
 
 // Counter
+const maxTime = 10; // How long questions should be displayd
+const resultTime = 5; // How long question results should be displayd
+const timer = document.getElementById("timer");
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
-const timer = document.getElementById("timer");
-const maxTime = 10; // Change here the time
 var currentTime = maxTime;
 
-// The Heart
 function countDown() {
   // displaying the time
-  if (currentTime >= -5) {
-      if (currentTime == maxTime) {
-          msg = "Time left: " + maxTime + " seconds";
-          timer.innerHTML = msg;
-          currentTime--;
-      }
-      else if (currentTime < maxTime) {
-        seconds = Math.floor(currentTime % maxTime);
-        msg = "Time left: " + seconds + " seconds";
-        timer.innerHTML = msg;
-        currentTime--;
-      }
+  if (currentTime >= -resultTime) {
+    timer.innerHTML = "Time left: " + currentTime + " seconds";;
+    currentTime--;
   }
-  // when timer reaches 0 do all the important stuff
-  if (currentTime == 0){
-      console.log("display");
-      questionId = questionsArray[index-1].question_Id; 
-      sendSelectedOption(selectedOption);
+  // when timer reaches -1
+  if (currentTime == -1){ // Display correct / false - Answer and show answer count
+    console.log("display");
+    questionId = questionsArray[index-1].question_Id; 
+    sendSelectedOption(selectedOption);
+    timer.hidden = true;
   }
-  else if (currentTime < -5) {
+  else if (currentTime == -resultTime) { // Display next question
+    // Reset
     buttonDisable(false);
     currentTime = maxTime;
     message.innerText = "";
@@ -199,6 +192,9 @@ function countDown() {
 
     if (displayNextQuesion()){ 
     } else { // when no question available
+    timer.innerHTML = "";
+    timer.hidden = false;
+    
     sendSelectedOption(selectedOption);
     // Dummy Page
     for (var i of quizContainer.children) {i.hidden = true;}
