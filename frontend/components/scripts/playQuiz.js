@@ -1,4 +1,4 @@
-const buttonArray = Array.from(document.querySelectorAll(".btn-group > button"));
+const buttonArray = Array.from(document.querySelectorAll(".btn-group button"));
 const statisticsArray = document.querySelectorAll("p");
 var questionsArray;
 var questionId;
@@ -112,6 +112,8 @@ const buttonStandartColor = "black";
 var selectedOption = null;
 
 function buttonDisable(boolean, selectedButton) {
+  message.innerText = "Please wait for next question!";
+
   buttonArray.forEach(button => {
     button.className = '';
     button.disabled = boolean;
@@ -160,7 +162,7 @@ function countDown() {
     currentTime--;
   }
   // when timer reaches -1
-  if (currentTime == -1){ // Display correct / false - Answer and show answer count
+  if (currentTime == 0){ // Display correct / false - Answer and show answer count
     timer.hidden = true;
 
     questionId = questionsArray[index-1].question_Id;
@@ -171,22 +173,22 @@ function countDown() {
     buttonDisable(false);
     currentTime = maxTime;
     message.innerText = "";
+    timer.innerHTML = "";
+    timer.hidden = false;
+
     for(const element of statisticsArray){
       element.innerText = '';
     }
 
     if (displayNextQuesion()){ 
     } else { // when no question available
-    timer.innerHTML = "";
-    timer.hidden = false;
-    
-    sendSelectedOption(selectedOption);
-    // Dummy Page
-    for (var i of quizContainer.children) {i.hidden = true;}
-    const wraperBtn = document.querySelectorAll('.wraper');
-    for (var element of wraperBtn) {element.style.display = "none";}
-    finish.hidden = false;
-    clearInterval(intervalSec);
+      
+      // Dummy Page
+      for (var i of quizContainer.children) {i.hidden = true;}
+      const wraperBtn = document.querySelectorAll('.wraper');
+      for (var element of wraperBtn) {element.style.display = "none";}
+      finish.hidden = false;
+      clearInterval(intervalSec);
     }
   }
   return;
@@ -194,6 +196,5 @@ function countDown() {
 
 // EventListeners
 buttonArray.forEach(button => {button.addEventListener('click', function() {
-  message.innerText = "Please wait for next question!";
   buttonDisable(true, button);
 })});
