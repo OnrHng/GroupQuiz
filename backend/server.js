@@ -130,25 +130,38 @@ wss.on('connection', function connection(ws) {
 
     }
 
+    // e.g. object for statistic
+    var optionsStatistics = {
+      option1: 1,
+      option2: 2,
+      option3: 3,
+      option4: 4
+
+    };
+
     // compare user answer with the correct answer
     if (jsonObj.eventType === 'selectedOption') {
       db.query("select correctAnswer from questions  where question_Id = ?",
         [jsonObj.questionId], (err, result) => {
           if(err) throw err;
+          
+          // count the options statistic in the object
 
           // send the just ' correct' msg if the user answer is right
           // other send 'wrong' msg and also send correctAnswer
           if (jsonObj.selectedOption === result[0].correctAnswer) {
-            console.log(jsonObj.selectedOption);
-            console.log(result[0].correctAnswer);
-
-            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct', correctAnswer : result[0].correctAnswer}));
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'correct', correctAnswer : result[0].correctAnswer, optionsStatistics: optionsStatistics}));
           } else {
-            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result[0].correctAnswer}));
+            ws.send(JSON.stringify({eventType: 'getCorrectOption', msg: 'wrong', correctAnswer : result[0].correctAnswer, optionsStatistics:optionsStatistics}));
           }
-      });
 
+          
+      });
     }
+
+    if (jsonObj.eventType === 'getStatistic') {
+      sendToAllClients(JSON.stringify({eventType: 'displayStatistic', optionsStatistics: optionsStatistics}));
+    } 
 
   });
 
