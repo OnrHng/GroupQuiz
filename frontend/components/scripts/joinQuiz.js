@@ -3,6 +3,7 @@ const inputCode = document.getElementById('givenCode');
 const participationName = document.getElementById('studentName');
 const pageDiv = document.getElementById('pageDiv');
 const message = document.getElementById("message");
+var studentId = "";
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
@@ -12,11 +13,16 @@ socket.onopen = function(e) {
 
 socket.onmessage = function(event) {
   var jsonObj = JSON.parse(event.data);
+
   if(jsonObj.type === 'goplayQuiz') {
     // go playQuiz page if student login in
     if (pageDiv.textContent.startsWith('Please wait for')) {
-      window.location.href = "../htmls/playQuiz.html";
+      window.location.href = "../htmls/playQuiz.html" + "?id=" + studentId;
     }
+  }
+  else if (jsonObj.eventType === 'ID') {
+    studentId = jsonObj.id
+    console.log(studentId);
   }
 };
 

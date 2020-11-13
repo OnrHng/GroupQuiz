@@ -33,7 +33,7 @@ socket.onmessage = function(event) {
   //console.log(`[message] Data received from server: ${event.data}`);
   var jsonObj = JSON.parse(event.data);
 
-  if(jsonObj.type === 'getNewName') {
+  if(jsonObj.type === 'joinNewStudent') {
     // document.getElementById('h2').innerText  += jsonObj.praticipationCode;
     namesDiv.textContent = jsonObj.names;
   }

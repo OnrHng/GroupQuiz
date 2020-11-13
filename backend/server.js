@@ -4,9 +4,22 @@ const app = express();
 const mysql = require("mysql");
 const dbconfig = require("./configDb.js");
 const praticipationCode = require("./components/quizCode.js");
+const crypto = require('crypto');
 const WebSocket = require('ws');
 
 let studentsNames = '';
+
+var correctAnswer;
+var students = {};
+// Send Quiz Name from Play Button
+var quizName;
+// e.g. object for statistic
+var optionsStatistics = {
+  option1: 0,
+  option2: 0,
+  option3: 0,
+  option4: 0,
+};
 
 // parse HTTP POST Data 
 const bodyParser = require('body-parser');
@@ -93,19 +106,9 @@ app.delete('/deleteQuiz', (req, res) => {
   );
 });
 
-// Send Quiz Name from Play Button
-var quizName = "test_correct_answer";
-// e.g. object for statistic
-var correctAnswer;
-var optionsStatistics = {
-  option1: 0,
-  option2: 0,
-  option3: 0,
-  option4: 0
-};
-
 app.post("/quizStart", function(req, res){
   quizName = req.body.quizName;
+  console.log(quizName);
   res.json({quizName});
 });
 
@@ -114,42 +117,47 @@ app.get('/quizStart', function(req, res) {
   res.json({praticipationCode, quizName});
 });
 
+
+
+
+
+
 //websocket methods
 wss.on('connection', function connection(ws) {
-
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
     var jsonObj = JSON.parse(message);
 
     if (jsonObj.eventType === 'joinNewStudent') {
+      newStudent(ws, jsonObj.data.participationName);
+      console.log(students);
+
       studentsNames = studentsNames + " " + jsonObj.data.participationName;
-      sendToAllClients(JSON.stringify({type: 'getNewName', names: studentsNames}));
+      sendToAllClients(JSON.stringify({type: 'joinNewStudent', names: studentsNames}));
     }
     
-    if (jsonObj.eventType === 'playQuiz') {
+    else if (jsonObj.eventType === 'playQuiz') {
         sendToAllClients(JSON.stringify({type: 'goplayQuiz'}));
-    };
-    if (jsonObj.eventType === 'getAllQuestions') {
+    }
+    else if (jsonObj.eventType === 'getAllQuestions') {
       // sql query to get all questions with answers without correct answer
       db.query("select question_Id, question, option1, option2, option3, option4 from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
         [quizName], (err, results) => {
           if(err) throw err;
-          console.log(results);
-          console.log(quizName);
-
-          //  post all question all clients.
-          ws.send(JSON.stringify({type: 'getAllQuestions', questions: results}));
+          ws.send(JSON.stringify({eventType: jsonObj.eventType, questions: results}));
       });
     }
 
     // compare user answer with the correct answer
-    if (jsonObj.eventType === 'selectedOption') {
+    else if (jsonObj.eventType === 'selectedOption') {
       db.query("select correctAnswer from questions  where question_Id = ?",
         [jsonObj.questionId], (err, result) => {
           if(err) throw err;
 
           correctAnswer = result[0].correctAnswer;
-          console.log(correctAnswer);
+          students[jsonObj.studentId].selectedOption = jsonObj.selectedOption;
+          console.log(students);
+          
     
           if (jsonObj.selectedOption === "option1") {
             optionsStatistics.option1 += 1;
@@ -161,30 +169,38 @@ wss.on('connection', function connection(ws) {
             optionsStatistics.option4 += 1;
           }
 
-          // for (var option in optionsStatistics) {
-          //   optionsStatistics[option] = 0;
-          // }
-          
       });
     }
 
-    if (jsonObj.eventType === 'getStatistic') {
-      if (jsonObj.selectedOption === correctAnswer) {
+    else if (jsonObj.eventType === 'getStatistic') {
+      if (students[jsonObj.studentId].selectedOption === correctAnswer) {
         ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'correct', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
       } else {
         ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'wrong', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
       }
     } 
 
+    else if (jsonObj.eventType === 'cleanStatistic') {
+      for (var option in optionsStatistics) {
+        optionsStatistics[option] = 0;
+      }
+    }
+
   });
+  
 
   ws.on('close', function close(number, reason) {
     console.log('close, number: ' + number + " reason: " + reason);
   });
 });
 
+function newStudent(ws, name) {
+  id = crypto.randomBytes(16).toString('hex');
+  students[id] = { name: name, selectedOption: null, points: 0 };
+  console.log("new user connected, id: " + id);
+  ws.send(JSON.stringify({ eventType: 'ID', id: id }));
+}
 
-// we use this func in the future
 // send data all clients for Broadcast
 function sendToAllClients(msg) {
   wss.clients.forEach(function(client) {

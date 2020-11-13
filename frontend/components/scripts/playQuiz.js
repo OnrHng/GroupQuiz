@@ -4,6 +4,8 @@ var questionsArray;
 var questionId;
 var intervalSec;
 intervalSec = setInterval(countDown, 1000);
+studentId = window.location.search.replace("?id=", "");
+console.log(studentId);
 
 
 
@@ -18,23 +20,24 @@ socket.onmessage = function(event) {
 //   console.log(`[message] Data received from server: ${event.data}`);
   var jsonObj = JSON.parse(event.data);
 
-  if(jsonObj.type === 'getAllQuestions') {
+  if(jsonObj.eventType === 'getAllQuestions') {
     questionsArray = jsonObj.questions;
-    console.log("getAllQuestions");
     console.log(questionsArray);
-    
-    displayNextQuesion();
-    // displaying first question and starting counter
-    
-}
-
-  if (jsonObj.eventType === 'getStatistic') {
+    displayNextQuesion(); // displaying first question 
+  }
+  else if (jsonObj.eventType === 'getStatistic') {
+    console.log(jsonObj.correctAnswer);
     if (jsonObj.msg === 'correct'){
+      console.log("correct");
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'wrong'){
+      console.log("wrong");
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
     }
+ 
+
+  
 
     // display Statistic
     for(const statistic in jsonObj.optionsStatistics){
@@ -141,7 +144,8 @@ function sendSelectedOption(selectedOption) {
   socket.send(JSON.stringify({
     eventType: 'selectedOption', 
     selectedOption: selectedOption, 
-    questionId: questionId
+    questionId: questionId,
+    studentId: studentId,
   }));
   console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
 };
@@ -149,11 +153,18 @@ function sendSelectedOption(selectedOption) {
 function getStatistic() {
   socket.send(JSON.stringify({
     eventType: 'getStatistic',
+    studentId: studentId,
+  }));
+}
+
+function cleanStatistic() {
+  socket.send(JSON.stringify({
+    eventType: 'cleanStatistic',
   }));
 }
 
 // Counter
-const maxTime = 15; // How long questions should be displayd
+const maxTime = 30; // How long questions should be displayd
 const resultTime = 10; // How long question results should be displayd
 const timer = document.getElementById("timer");
 const quizContainer = document.querySelector(".playquiz-container");
@@ -167,7 +178,7 @@ function countDown() {
     currentTime--;
   }
   // when timer reaches -1
-  if (currentTime == 0){ // Display correct / false - Answer and show answer count
+  if (currentTime == -1){ // Display correct / false - Answer and show answer count
     timer.hidden = true;
     getStatistic();
   }
@@ -178,6 +189,7 @@ function countDown() {
     message.innerText = "";
     timer.innerHTML = "";
     timer.hidden = false;
+    cleanStatistic();
 
     for(const element of statisticsArray){
       element.innerText = '';
