@@ -94,3 +94,11 @@ label {
 .wrong {
   background-color: red;
 }
+
+ul , li {
+  font-size: 24px;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
