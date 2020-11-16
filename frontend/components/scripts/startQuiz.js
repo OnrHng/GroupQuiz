@@ -8,8 +8,9 @@ window.onload = function() {
   fetch("/quizStart")
     .then(response => response.json())
     .then(function(data) {
+      console.log(data);
       quizName = data.quizName;
-      document.getElementById('h2').innerText  += data.praticipationCode.praticipationCode;
+      document.getElementById('h2').innerText  += data.praticipationCode;
       quizNameDiv.innerText = quizNameDiv.innerText + " " + data.quizName;
   });
 };
