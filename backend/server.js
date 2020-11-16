@@ -3,7 +3,8 @@ const express = require('express');
 const app = express();
 const mysql = require("mysql");
 const dbconfig = require("./configDb.js");
-const praticipationCode = require("./components/quizCode.js");
+// get it and put the new quiz button click func
+let praticipationCode = '';
 const crypto = require('crypto');
 const WebSocket = require('ws');
 
@@ -108,19 +109,17 @@ app.delete('/deleteQuiz', (req, res) => {
 
 app.post("/quizStart", function(req, res){
   quizName = req.body.quizName;
+  students = {};
   console.log(quizName);
   res.json({quizName});
 });
 
 // generate Code and send the code to frontend
 app.get('/quizStart', function(req, res) {
+  // quiz code
+  praticipationCode = require("./components/quizCode.js");
   res.json({praticipationCode, quizName});
 });
-
-
-
-
-
 
 //websocket methods
 wss.on('connection', function connection(ws) {
@@ -157,7 +156,7 @@ wss.on('connection', function connection(ws) {
           correctAnswer = result[0].correctAnswer;
           students[jsonObj.studentId].selectedOption = jsonObj.selectedOption;
           console.log(students);
-          
+          console.log(jsonObj.selectedOption);
     
           if (jsonObj.selectedOption === "option1") {
             optionsStatistics.option1 += 1;
@@ -170,12 +169,26 @@ wss.on('connection', function connection(ws) {
           }
 
       });
+    } 
+
+    else if (jsonObj.eventType === 'initiliazeCorrectAnswer') {
+      //console.log('question id ' + jsonObj.questionId);
+      db.query("select correctAnswer from questions  where question_Id = ?",
+        [jsonObj.questionId], (err, result) => {
+        if(err) throw err;
+        
+        correctAnswer = result[0].correctAnswer;
+      });
     }
 
     else if (jsonObj.eventType === 'getStatistic') {
       if (students[jsonObj.studentId].selectedOption === correctAnswer) {
+        students[jsonObj.studentId].points += 1;
         ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'correct', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
-      } else {
+      }else if(students[jsonObj.studentId].selectedOption === null){
+        ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'noAnswer', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
+      } 
+      else {
         ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'wrong', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
       }
     } 
@@ -184,6 +197,14 @@ wss.on('connection', function connection(ws) {
       for (var option in optionsStatistics) {
         optionsStatistics[option] = 0;
       }
+
+      for ( var student in students) {
+        //console.log('clear students selected option');
+        students[student].selectedOption = null;
+      }
+    } else if (jsonObj.eventType === 'getRanking'){
+      let sortedStudents = Object.values(students).sort((a,b) => b.points-a.points);
+      ws.send(JSON.stringify({eventType: 'displayRanking', students: sortedStudents}));
     }
 
   });

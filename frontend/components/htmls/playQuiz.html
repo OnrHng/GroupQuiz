@@ -12,6 +12,7 @@
     <div class="playquiz-container" id="container">
       <h1 id="question">Question 1</h1>
         <div class="btn-group" id='pageDiv'>
+          <h3 id="result"></h3>
           <div class="wraper">
             <button id="option1" class="btn hover">Option 1</button>      
             <p class="statistic" id="statistic1"></p>
@@ -33,7 +34,9 @@
           <h4 id="timer"></h4> <!--This is place for 30 seconds timer-->
           <h3 id="message"></h4>
         </div>
-        <h1 id="Finish" hidden>Finish! Answered all questions!</h1>
+        <h2 id="Finish" hidden>Finish! Answered all questions!</h2>
+        <h1 id="ranking-header" hidden>TOP 3</h1>
+        <ul id="rankingList"></ul>
       </div>
     <script src="../scripts/playQuiz.js"></script>
 </body>

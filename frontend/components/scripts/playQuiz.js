@@ -1,5 +1,8 @@
 const buttonArray = Array.from(document.querySelectorAll(".btn-group button"));
 const statisticsArray = document.querySelectorAll("p");
+const resultMessage = document.getElementById('result');
+const rankingHeader = document.getElementById('ranking-header');
+const rankingList = document.getElementById('rankingList');
 var questionsArray;
 var questionId;
 var intervalSec;
@@ -24,20 +27,27 @@ socket.onmessage = function(event) {
     questionsArray = jsonObj.questions;
     console.log(questionsArray);
     displayNextQuesion(); // displaying first question 
+
+    questionId = questionsArray[index-1].question_Id;
+    initiliazeCorrectAnswer(questionId);
+
   }
   else if (jsonObj.eventType === 'getStatistic') {
     console.log(jsonObj.correctAnswer);
     if (jsonObj.msg === 'correct'){
       console.log("correct");
+      resultMessage.innerText = "Answer is correct.";
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'wrong'){
       console.log("wrong");
+      resultMessage.innerText = "Answer is wrong!";
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
-    }
- 
-
-  
+    } else if (jsonObj.msg === 'noAnswer'){
+      console.log("noAnswer");
+      resultMessage.innerText = "You didn't choose any answer!!!";
+      displayCorrectAnswer(jsonObj.correctAnswer);
+    } 
 
     // display Statistic
     for(const statistic in jsonObj.optionsStatistics){
@@ -52,6 +62,9 @@ socket.onmessage = function(event) {
          document.getElementById('statistic4').innerText = jsonObj.optionsStatistics[statistic];
        }
      }
+  } else if (jsonObj.eventType === 'displayRanking') {
+    console.log(jsonObj.students);  
+    displayRanking(jsonObj.students);
   }
 };
 
@@ -163,9 +176,32 @@ function cleanStatistic() {
   }));
 }
 
+function initiliazeCorrectAnswer(questionId) {
+  socket.send(JSON.stringify({
+    eventType: 'initiliazeCorrectAnswer',
+    questionId: questionId
+  }));
+}
+
+function getRanking() {
+  socket.send(JSON.stringify({
+    eventType: 'getRanking'
+  }));
+}
+
+function displayRanking(students) {
+  rankingHeader.hidden = false;
+  rankingList.hidden = false;
+  for(var student of students) {
+    var li = document.createElement("li");
+    li.appendChild(document.createTextNode(student.name + '\t ' + student.points + 'P'));
+    rankingList.appendChild(li);
+  }
+}
+
 // Counter
-const maxTime = 30; // How long questions should be displayd
-const resultTime = 10; // How long question results should be displayd
+const maxTime = 15; // How long questions should be displayd
+const resultTime = 5; // How long question results should be displayd
 const timer = document.getElementById("timer");
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
@@ -190,14 +226,18 @@ function countDown() {
     timer.innerHTML = "";
     timer.hidden = false;
     cleanStatistic();
+    resultMessage.innerText = '';
 
     for(const element of statisticsArray){
       element.innerText = '';
     }
 
     if (displayNextQuesion()){ 
+      questionId = questionsArray[index-1].question_Id;
+      initiliazeCorrectAnswer(questionId);
     } else { // when no question available
-      
+      getRanking();
+
       // Dummy Page
       for (var i of quizContainer.children) {i.hidden = true;}
       const wraperBtn = document.querySelectorAll('.wraper');
