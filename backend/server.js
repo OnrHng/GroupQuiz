@@ -9,9 +9,9 @@ const crypto = require('crypto');
 const WebSocket = require('ws');
 
 let studentsNames = '';
-
 var correctAnswer;
 var students = {};
+var selectedOptionCount = 0;
 // Send Quiz Name from Play Button
 var quizName;
 // e.g. object for statistic
@@ -141,6 +141,8 @@ app.get('/quizStart', function(req, res) {
   res.json({praticipationCode:praticipationCode});
 });
 
+
+
 //websocket methods
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
@@ -173,10 +175,9 @@ wss.on('connection', function connection(ws) {
         [jsonObj.questionId], (err, result) => {
           if(err) throw err;
 
-          correctAnswer = result[0].correctAnswer;
           students[jsonObj.studentId].selectedOption = jsonObj.selectedOption;
-          console.log(students);
-          console.log(jsonObj.selectedOption);
+          
+          console.log(wss.clients);
     
           if (jsonObj.selectedOption === "option1") {
             optionsStatistics.option1 += 1;
@@ -186,6 +187,11 @@ wss.on('connection', function connection(ws) {
             optionsStatistics.option3 += 1;
           } else if (jsonObj.selectedOption === "option4") {
             optionsStatistics.option4 += 1;
+          }
+
+          selectedOptionCount +=1;
+          if (selectedOptionCount == Object.keys(students).length) {
+            sendToAllClients(JSON.stringify({eventType: 'displayNextQuestion'}));
           }
 
       });
@@ -214,6 +220,7 @@ wss.on('connection', function connection(ws) {
     } 
 
     else if (jsonObj.eventType === 'cleanStatistic') {
+      selectedOptionCount = 0;
       for (var option in optionsStatistics) {
         optionsStatistics[option] = 0;
       }

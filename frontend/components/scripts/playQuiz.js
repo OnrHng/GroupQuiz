@@ -19,9 +19,11 @@ socket.onopen = function(e) {
   socket.send(JSON.stringify({eventType: 'getAllQuestions'}));
 };
 
+
 socket.onmessage = function(event) {
 //   console.log(`[message] Data received from server: ${event.data}`);
   var jsonObj = JSON.parse(event.data);
+
 
   if(jsonObj.eventType === 'getAllQuestions') {
     questionsArray = jsonObj.questions;
@@ -65,6 +67,10 @@ socket.onmessage = function(event) {
   } else if (jsonObj.eventType === 'displayRanking') {
     console.log(jsonObj.students);  
     displayRanking(jsonObj.students);
+
+  } else if (jsonObj.eventType === 'displayNextQuestion') {
+    console.log("displayNextQuesion");
+    currentTime = 0;
   }
 };
 
@@ -194,7 +200,7 @@ function displayRanking(students) {
   rankingTable.hidden = false;
   var rank = 1; // max should be 3
 
-  
+  var counter = 0;
   for(var i in students) {
     // Ranking
     if (students.length > 1){
@@ -206,29 +212,34 @@ function displayRanking(students) {
         }
       }
     }
-
+    students[i].rank = rank;
+  };
+    
+  for (var student of students) {
+    counter++;
+    if (((student.rank == 1 || student.rank == 2) && counter > 3) || student.rank > 3) {
+      console.log("return");
+      return
+    } else {
     // Table
     var row = rankingTable.insertRow();
 
     var cellRank = row.insertCell();
-    cellRank.innerText = rank + ". ";
+    cellRank.innerText = student.rank + ". ";
   
     var cellName = row.insertCell();
     cellName.className = "cellName";
-    cellName.innerText = students[i].name;
+    cellName.innerText = student.name;
 
     var cellPoints = row.insertCell();
-    cellPoints.innerText = students[i].points + "P.";
-  }
-
-  // after then ranking 3 return null
-  if(rank > 3) {
-    return;
+    cellPoints.innerText = student.points + "P.";
   }
 }
+}
+
 
 // Counter
-const maxTime = 10; // How long questions should be displayd
+const maxTime = 30; // How long questions should be displayd
 const resultTime = 5; // How long question results should be displayd
 const timer = document.getElementById("timer");
 const quizContainer = document.querySelector(".playquiz-container");
