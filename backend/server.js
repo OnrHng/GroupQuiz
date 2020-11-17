@@ -49,6 +49,20 @@ var httpServer = app.listen(PORT, () => {
 // Websocket server
 const wss = new WebSocket.Server({ server : httpServer });
 
+// generate participation code without module
+const codeArray = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N",
+                "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
+                 "a", "b", "c","d", "e", "g", "h", "i", "j", "k", "l", "m", "n",
+                    "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+                        "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]; 
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+  }
+  praticipationCode = a.slice(0,6).join("");;
+}
 
 function escapeHtml(unsafe) {
   return unsafe
@@ -118,8 +132,8 @@ app.post("/quizStart", function(req, res){
 // generate Code and send the code to frontend
 app.get('/quizStart', function(req, res) {
   // quiz code
-  praticipationCode = require("./components/quizCode.js");
-  res.json({praticipationCode, quizName});
+  shuffle(codeArray);
+  res.json({praticipationCode:praticipationCode, quizName:quizName});
 });
 
 //websocket methods
