@@ -109,9 +109,10 @@ app.delete('/deleteQuiz', (req, res) => {
 
 app.post("/quizStart", function(req, res){
   quizName = req.body.quizName;
-  students = {};
-  console.log(quizName);
   res.json({quizName});
+  // Reset
+  students = {};
+  studentsNames = "";
 });
 
 // generate Code and send the code to frontend
@@ -216,7 +217,7 @@ wss.on('connection', function connection(ws) {
 });
 
 function newStudent(ws, name) {
-  id = crypto.randomBytes(16).toString('hex');
+  id = crypto.randomBytes(8).toString('hex');
   students[id] = { name: name, selectedOption: null, points: 0 };
   console.log("new user connected, id: " + id);
   ws.send(JSON.stringify({ eventType: 'ID', id: id }));

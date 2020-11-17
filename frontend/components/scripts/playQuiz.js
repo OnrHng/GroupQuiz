@@ -2,7 +2,7 @@ const buttonArray = Array.from(document.querySelectorAll(".btn-group button"));
 const statisticsArray = document.querySelectorAll("p");
 const resultMessage = document.getElementById('result');
 const rankingHeader = document.getElementById('ranking-header');
-const rankingList = document.getElementById('rankingList');
+const rankingTable = document.getElementById('rankingTable');
 var questionsArray;
 var questionId;
 var intervalSec;
@@ -191,17 +191,28 @@ function getRanking() {
 
 function displayRanking(students) {
   rankingHeader.hidden = false;
-  rankingList.hidden = false;
+  rankingTable.hidden = false;
+  var rank = 1;
+
   for(var student of students) {
-    var li = document.createElement("li");
-    li.appendChild(document.createTextNode(student.name + '\t ' + student.points + 'P'));
-    rankingList.appendChild(li);
+    var row = rankingTable.insertRow();
+
+    var cellRank = row.insertCell();
+    cellRank.innerText = rank + ". ";
+    rank++;
+
+    var cellName = row.insertCell();
+    cellName.className = "cellName";
+    cellName.innerText = student.name;
+
+    var cellPoints = row.insertCell();
+    cellPoints.innerText = student.points + "P.";
   }
 }
 
 // Counter
-const maxTime = 15; // How long questions should be displayd
-const resultTime = 5; // How long question results should be displayd
+const maxTime = 2; // How long questions should be displayd
+const resultTime = 2; // How long question results should be displayd
 const timer = document.getElementById("timer");
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");

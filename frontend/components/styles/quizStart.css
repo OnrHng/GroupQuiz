@@ -46,3 +46,6 @@ button {
 button:hover {
   filter: brightness(200%);
 }
+#studentsNames {
+  text-align: center;
+}
