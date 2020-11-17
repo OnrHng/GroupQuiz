@@ -192,21 +192,30 @@ function getRanking() {
 function displayRanking(students) {
   rankingHeader.hidden = false;
   rankingTable.hidden = false;
-  var rank = 1;
+  var rank = 1; // max should be 3
 
-  for(var student of students) {
+  
+  for(var i in students) {
+    // Ranking
+it 
+
+
+
+
+
+
+    // Table
     var row = rankingTable.insertRow();
 
     var cellRank = row.insertCell();
     cellRank.innerText = rank + ". ";
-    rank++;
-
+  
     var cellName = row.insertCell();
     cellName.className = "cellName";
-    cellName.innerText = student.name;
+    cellName.innerText = students[i].name;
 
     var cellPoints = row.insertCell();
-    cellPoints.innerText = student.points + "P.";
+    cellPoints.innerText = students[i].points + "P.";
   }
 }
 
