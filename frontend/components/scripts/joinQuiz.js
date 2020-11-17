@@ -44,7 +44,7 @@ function checkCode() {
     fetch("/quizStart")
     .then(response => response.json())
     .then(function(data) {
-      if (inputCode.value === data.praticipationCode.praticipationCode) {
+      if (inputCode.value === data.praticipationCode) {
         postName();
         // update this page just as a loading page
         pageDiv.innerHTML = '';

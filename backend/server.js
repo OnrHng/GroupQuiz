@@ -130,10 +130,15 @@ app.post("/quizStart", function(req, res){
 });
 
 // generate Code and send the code to frontend
-app.get('/quizStart', function(req, res) {
+app.get('/generateCode', function(req, res) {
   // quiz code
   shuffle(codeArray);
   res.json({praticipationCode:praticipationCode, quizName:quizName});
+});
+
+app.get('/quizStart', function(req, res) {
+  // quiz code
+  res.json({praticipationCode:praticipationCode});
 });
 
 //websocket methods
