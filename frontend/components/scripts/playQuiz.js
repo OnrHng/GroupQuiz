@@ -197,12 +197,15 @@ function displayRanking(students) {
   
   for(var i in students) {
     // Ranking
-it 
-
-
-
-
-
+    if (students.length > 1){
+      if (parseInt(i) > 0){
+        var previousIndex = parseInt(i) - 1;
+        var previousStudent = students[previousIndex];
+        if(students[i].points != previousStudent.points){
+          rank++;
+        }
+      }
+    }
 
     // Table
     var row = rankingTable.insertRow();
@@ -217,11 +220,16 @@ it
     var cellPoints = row.insertCell();
     cellPoints.innerText = students[i].points + "P.";
   }
+
+  // after then ranking 3 return null
+  if(rank > 3) {
+    return;
+  }
 }
 
 // Counter
-const maxTime = 2; // How long questions should be displayd
-const resultTime = 2; // How long question results should be displayd
+const maxTime = 10; // How long questions should be displayd
+const resultTime = 5; // How long question results should be displayd
 const timer = document.getElementById("timer");
 const quizContainer = document.querySelector(".playquiz-container");
 const finish = document.getElementById("Finish");
