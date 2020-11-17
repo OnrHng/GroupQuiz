@@ -5,10 +5,9 @@ let quizName;
 
 // Play Button - Show Quiz Name
 window.onload = function() {
-  fetch("/quizStart")
+  fetch("/generateCode")
     .then(response => response.json())
     .then(function(data) {
-      console.log(data);
       quizName = data.quizName;
       document.getElementById('h2').innerText  += data.praticipationCode;
       quizNameDiv.innerText = quizNameDiv.innerText + " " + data.quizName;
