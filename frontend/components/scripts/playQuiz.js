@@ -3,6 +3,7 @@ const statisticsArray = document.querySelectorAll("p");
 const resultMessage = document.getElementById('result');
 const rankingHeader = document.getElementById('ranking-header');
 const rankingTable = document.getElementById('rankingTable');
+const questionPoint = document.getElementById('point');
 var questionsArray;
 var questionId;
 var intervalSec;
@@ -99,7 +100,7 @@ var index = 0;
 function displayNextQuesion() {
     if (index < questionsArray.length) {
         question.innerText = questionsArray[index].question;
-
+        questionPoint.innerText = questionsArray[index].questionPoint + " Points";
         buttonArray[0].innerText = questionsArray[index].option1;
         buttonArray[1].innerText = questionsArray[index].option2;
         buttonArray[2].innerText = questionsArray[index].option3;
@@ -266,6 +267,7 @@ function countDown() {
     timer.hidden = false;
     cleanStatistic();
     resultMessage.innerText = '';
+    questionPoint.innerText = '';
 
     for(const element of statisticsArray){
       element.innerText = '';

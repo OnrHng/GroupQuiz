@@ -103,4 +103,7 @@ ul, li, table {
 .cellName {
   padding-right: 20px;
 }
-
+#point {
+  align-self: start;   
+  margin: 0;
+}
