@@ -215,10 +215,10 @@ function displayRanking(students) {
     }
     students[i].rank = rank;
   };
-    
+  var rank2Counter = 0;
   for (var student of students) {
     counter++;
-    if (((student.rank == 1 || student.rank == 2) && counter > 3) || student.rank > 3) {
+    if ((student.rank == 3 && rank2Counter == 2) || student.rank < 3) {
       console.log("return");
       return
     } else {
@@ -234,6 +234,8 @@ function displayRanking(students) {
 
     var cellPoints = row.insertCell();
     cellPoints.innerText = student.points + "P.";
+
+    if (student.rank == 2) {rank2Counter += 1;}
   }
 }
 }
