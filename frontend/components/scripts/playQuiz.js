@@ -217,7 +217,6 @@ function displayRanking(students) {
   };
   var rank2Counter = 0;
   for (var student of students) {
-    counter++;
     if ((student.rank == 3 && rank2Counter == 2) || student.rank < 3) {
       console.log("return");
       return
