@@ -32,14 +32,20 @@ app.use(bodyParser.json()); // accept json data
 app.use(express.static('frontend'));
 
 
-db = mysql.createConnection(dbconfig.dbSettings);
-db.connect((err) => {
-  if (err) {
-    console.log('Error connecting to DB: change connection settings!');
-  } else {
-    console.log('Connection established!');
-  }
+//db = mysql.createConnection(dbconfig.dbSettings);
+var db = mysql.createPool({
+  host: dbconfig.dbSettings.host,
+  user: dbconfig.dbSettings.user,
+  password: dbconfig.dbSettings.password,
+  database: dbconfig.dbSettings.database
 });
+// db.connect((err) => {
+//   if (err) {
+//     console.log('Error connecting to DB: change connection settings!');
+//   } else {
+//     console.log('Connection established!');
+//   }
+// });
 
 // Running Server on PORT
 const PORT = process.env.PORT || 3000;
