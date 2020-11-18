@@ -44,6 +44,7 @@ db.connect((err) => {
 // Running Server on PORT
 const PORT = process.env.PORT || 3000;
 var httpServer = app.listen(PORT, () => {
+  if (err) console.log(err);
   console.log(`HTTP server listening at ${PORT}`);
 });
 
