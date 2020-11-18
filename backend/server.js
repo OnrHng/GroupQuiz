@@ -29,22 +29,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // accept json data
 
 // put client-side code (html/css/js) in the frontend folder
-app.use(express.static('../frontend'));
+app.use(express.static('frontend'));
 
 
-db = mysql.createConnection(dbconfig.dbSettings);
-db.connect((err) => {
-  if (err) {
-    console.log('Error connecting to DB: change connection settings!');
-  } else {
-    console.log('Connection established!');
-  }
+var db = mysql.createPool({
+  host: dbconfig.dbSettings.host,
+  user: dbconfig.dbSettings.user,
+  password: dbconfig.dbSettings.password,
+  database: dbconfig.dbSettings.database
 });
 
+
 // Running Server on PORT
-const PORT = 3000;
-var httpServer = app.listen(PORT, () => {
-  console.log(`HTTP server listening at http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3000;
+var httpServer = app.listen(PORT, (err) => {
+  if (err) console.log(err);
+  console.log(`HTTP server listening at ${PORT}`);
 });
 
 // Websocket server
@@ -134,11 +134,15 @@ app.post("/quizStart", function(req, res){
 app.get('/generateCode', function(req, res) {
   // quiz code
   shuffle(codeArray);
+  console.log(praticipationCode);
+
   res.json({praticipationCode:praticipationCode, quizName:quizName});
 });
 
 app.get('/quizStart', function(req, res) {
   // quiz code
+  console.log(praticipationCode);
+
   res.json({praticipationCode:praticipationCode});
 });
 

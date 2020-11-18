@@ -14,7 +14,7 @@ console.log(studentId);
 
 
 // web socket on frontend , should implement here
-var socket = new WebSocket("ws://localhost:3000/");
+var socket = new WebSocket("wss://play-group-quiz.herokuapp.com/");
 socket.onopen = function(e) {
   console.log("[open] Connection established");
   socket.send(JSON.stringify({eventType: 'getAllQuestions'}));

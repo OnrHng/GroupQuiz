@@ -7,6 +7,7 @@ CREATE TABLE `questions` (
   `option3` varchar(45) NOT NULL,
   `option4` varchar(45) NOT NULL,
   `correctAnswer` varchar(45) NOT NULL,
+  `questionPoint` int DEFAULT 1,
   PRIMARY KEY (`question_Id`),
   KEY `quiz_Id_idx` (`quiz_Id`),
   CONSTRAINT `quiz_Id` FOREIGN KEY (`quiz_Id`) REFERENCES `quiz` (`quiz_Id`)

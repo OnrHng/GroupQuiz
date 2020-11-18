@@ -8,6 +8,7 @@ window.onload = function() {
   fetch("/generateCode")
     .then(response => response.json())
     .then(function(data) {
+      console.log(data);
       quizName = data.quizName;
       document.getElementById('h2').innerText  += data.praticipationCode;
       quizNameDiv.innerText = quizNameDiv.innerText + " " + data.quizName;
@@ -24,7 +25,7 @@ function startQuiz() {
 
 // should be display all students name
 // web socket on frontend , should implement here
-var socket = new WebSocket("ws://localhost:3000/");
+var socket = new WebSocket("wss://play-group-quiz.herokuapp.com/");
 socket.onopen = function(e) {
   console.log("[open] Connection established");
 };

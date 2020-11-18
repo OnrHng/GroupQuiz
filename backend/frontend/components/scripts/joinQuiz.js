@@ -6,7 +6,7 @@ const message = document.getElementById("message");
 var studentId = "";
 
 // web socket on frontend , should implement here
-var socket = new WebSocket("ws://localhost:3000/");
+var socket = new WebSocket("wss://play-group-quiz.herokuapp.com/");
 socket.onopen = function(e) {
   console.log("[open] Connection established");
 };
@@ -44,6 +44,7 @@ function checkCode() {
     fetch("/quizStart")
     .then(response => response.json())
     .then(function(data) {
+      console.log(data);
       if (inputCode.value === data.praticipationCode) {
         postName();
         // update this page just as a loading page
