@@ -161,7 +161,7 @@ wss.on('connection', function connection(ws) {
     }
     else if (jsonObj.eventType === 'getAllQuestions') {
       // sql query to get all questions with answers without correct answer
-      db.query("select question_Id, question, option1, option2, option3, option4 from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
+      db.query("select question_Id, question, option1, option2, option3, option4, questionPoint from questions  where quiz_Id in (select quiz_Id from quiz where quiz_name = ?)",
         [quizName], (err, results) => {
           if(err) throw err;
           ws.send(JSON.stringify({eventType: jsonObj.eventType, questions: results}));
