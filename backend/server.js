@@ -29,7 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); // accept json data
 
 // put client-side code (html/css/js) in the frontend folder
-app.use(express.static('../frontend'));
+app.use(express.static('frontend'));
 
 
 db = mysql.createConnection(dbconfig.dbSettings);
@@ -42,9 +42,9 @@ db.connect((err) => {
 });
 
 // Running Server on PORT
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 var httpServer = app.listen(PORT, () => {
-  console.log(`HTTP server listening at http://localhost:${PORT}`);
+  console.log(`HTTP server listening at ${PORT}`);
 });
 
 // Websocket server

@@ -1,6 +1,5 @@
-var url = new URL('http://localhost:3000/quiz')
 
-fetch(url)
+fetch("/quiz")
 .then(response => response.json())
 .then(function(data) {
     var tbody = document.getElementById('tbody');
