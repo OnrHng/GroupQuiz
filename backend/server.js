@@ -11,6 +11,7 @@ const WebSocket = require('ws');
 let studentsNames = '';
 
 var correctAnswer;
+let questionPoint;
 var students = {};
 // Send Quiz Name from Play Button
 var quizName;
@@ -86,9 +87,9 @@ app.post('/submitQuizName', (req, res) => {
 
 // Post Questions on DB
 app.post('/postQuestions', (req, res) => {
-  db.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer) values (?, ?, ?, ?, ?, ?, ?)",
+  db.query("INSERT INTO questions (quiz_Id, question, option1, option2, option3, option4, correctAnswer, questionPoint) values (?, ?, ?, ?, ?, ?, ?, ?)",
     [req.body.quizId, req.body.question, req.body.option1, req.body.option2,
-    req.body.option3, req.body.option4, req.body.correctAnswer],
+    req.body.option3, req.body.option4, req.body.correctAnswer, req.body.questionPoint],
 
     (err, result) => {
       if (err) throw err;
@@ -193,17 +194,18 @@ wss.on('connection', function connection(ws) {
 
     else if (jsonObj.eventType === 'initiliazeCorrectAnswer') {
       //console.log('question id ' + jsonObj.questionId);
-      db.query("select correctAnswer from questions  where question_Id = ?",
+      db.query("select correctAnswer, questionPoint from questions  where question_Id = ?",
         [jsonObj.questionId], (err, result) => {
         if(err) throw err;
         
         correctAnswer = result[0].correctAnswer;
+        questionPoint = result[0].questionPoint;
       });
     }
 
     else if (jsonObj.eventType === 'getStatistic') {
       if (students[jsonObj.studentId].selectedOption === correctAnswer) {
-        students[jsonObj.studentId].points += 1;
+        students[jsonObj.studentId].points += questionPoint;
         ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'correct', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));
       }else if(students[jsonObj.studentId].selectedOption === null){
         ws.send(JSON.stringify({eventType: 'getStatistic', msg: 'noAnswer', correctAnswer : correctAnswer, optionsStatistics: optionsStatistics}));

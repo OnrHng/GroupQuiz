@@ -54,6 +54,7 @@ function submitQuiz() {
     // parse each question
     var questionCount = 0;
     for (var questionContainer of questionContainerArray) {
+      var questionPointEl = questionContainer.querySelector('.point');
       var textFields = questionContainer.querySelectorAll(".answer input[type=text]");
       var radioButtons = questionContainer.querySelectorAll(".answer input[type=radio]");
        
@@ -81,6 +82,7 @@ function submitQuiz() {
       var option2 = textFields[1].value;
       var option3 = textFields[2].value;
       var option4 = textFields[3].value;
+      var questionPoint = questionPointEl.value;
 
       fetch("/postQuestions", {
         headers: {
@@ -95,7 +97,8 @@ function submitQuiz() {
           option2: option2,
           option3: option3,
           option4: option4,
-          correctAnswer: correctAnswer, 
+          correctAnswer: correctAnswer,
+          questionPoint: questionPoint 
         })
         }
       )
