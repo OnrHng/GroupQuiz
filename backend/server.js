@@ -134,11 +134,15 @@ app.post("/quizStart", function(req, res){
 app.get('/generateCode', function(req, res) {
   // quiz code
   shuffle(codeArray);
+  console.log(praticipationCode);
+
   res.json({praticipationCode:praticipationCode, quizName:quizName});
 });
 
 app.get('/quizStart', function(req, res) {
   // quiz code
+  console.log(praticipationCode);
+
   res.json({praticipationCode:praticipationCode});
 });
 
