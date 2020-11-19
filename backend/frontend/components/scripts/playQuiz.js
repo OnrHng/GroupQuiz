@@ -195,12 +195,10 @@ function getRanking() {
     eventType: 'getRanking'
   }));
 }
-
 function displayRanking(students) {
   rankingHeader.hidden = false;
   rankingTable.hidden = false;
   var rank = 1; // max should be 3
-
   var counter = 0;
   for(var i in students) {
     // Ranking
@@ -215,25 +213,24 @@ function displayRanking(students) {
     }
     students[i].rank = rank;
   };
+  var rank1Counter = 0;
   var rank2Counter = 0;
   for (var student of students) {
-    if ((student.rank == 3 && rank2Counter == 2) || student.rank < 3) {
+    if ((student.rank == 2 && rank1Counter > 2) || (student.rank == 3 && rank2Counter > 1) || (student.rank > 3)) {
       console.log("return");
       return
     } else {
+      console.log("add rank");
     // Table
     var row = rankingTable.insertRow();
-
     var cellRank = row.insertCell();
     cellRank.innerText = student.rank + ". ";
-  
     var cellName = row.insertCell();
     cellName.className = "cellName";
     cellName.innerText = student.name;
-
     var cellPoints = row.insertCell();
     cellPoints.innerText = student.points + "P.";
-
+    if (student.rank == 1) {rank1Counter += 1;}
     if (student.rank == 2) {rank2Counter += 1;}
   }
 }
