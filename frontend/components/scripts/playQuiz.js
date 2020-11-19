@@ -9,26 +9,23 @@ var questionId;
 var intervalSec;
 intervalSec = setInterval(countDown, 1000);
 studentId = window.location.search.replace("?id=", "");
-console.log(studentId);
 
 
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("ws://localhost:3000/");
 socket.onopen = function(e) {
-  console.log("[open] Connection established");
   socket.send(JSON.stringify({eventType: 'getAllQuestions'}));
 };
 
 
 socket.onmessage = function(event) {
-//   console.log(`[message] Data received from server: ${event.data}`);
   var jsonObj = JSON.parse(event.data);
 
 
   if(jsonObj.eventType === 'getAllQuestions') {
     questionsArray = jsonObj.questions;
-    console.log(questionsArray);
+  
     displayNextQuesion(); // displaying first question 
 
     questionId = questionsArray[index-1].question_Id;
@@ -36,25 +33,25 @@ socket.onmessage = function(event) {
 
   }
   else if (jsonObj.eventType === 'getStatistic') {
-    console.log(jsonObj.correctAnswer);
+  
     if (jsonObj.msg === 'correct'){
-      console.log("correct");
+    
       resultMessage.innerText = "Answer is correct.";
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'wrong'){
-      console.log("wrong");
+    
       resultMessage.innerText = "Answer is wrong!";
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'noAnswer'){
-      console.log("noAnswer");
+    
       resultMessage.innerText = "You didn't choose any answer!!!";
       displayCorrectAnswer(jsonObj.correctAnswer);
     } 
 
     // display Statistic
     for(const statistic in jsonObj.optionsStatistics){
-      //  console.log(statistic);
+      // 
        if (statistic === 'option1') {
          document.getElementById('statistic1').innerText = jsonObj.optionsStatistics[statistic];
        } else if (statistic === 'option2') {
@@ -66,26 +63,26 @@ socket.onmessage = function(event) {
        }
      }
   } else if (jsonObj.eventType === 'displayRanking') {
-    console.log(jsonObj.students);  
+  
     displayRanking(jsonObj.students);
 
   } else if (jsonObj.eventType === 'displayNextQuestion') {
-    console.log("displayNextQuesion");
+  
     currentTime = 0;
   }
 };
 
 socket.onclose = function(event) {
   if (event.wasClean) {
-    console.log(`[close] Connection closed cleanly, reason=${event.reason}`);
+  
   } else {
     // e.g. server process killed or network down
-    console.log('[close] Connection died, code:' + event.code);
+  
   }
 };
 
 socket.onerror = function(error) {
-  console.log(`[error] ${error.message}`);
+
 };
 
 
@@ -105,7 +102,7 @@ function displayNextQuesion() {
         buttonArray[1].innerText = questionsArray[index].option2;
         buttonArray[2].innerText = questionsArray[index].option3;
         buttonArray[3].innerText = questionsArray[index].option4;
-        console.log(index);
+      
         index++;
         return true;
 
@@ -167,7 +164,7 @@ function sendSelectedOption(selectedOption) {
     questionId: questionId,
     studentId: studentId,
   }));
-  console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
+
 };
 
 function getStatistic() {
@@ -218,10 +215,11 @@ function displayRanking(students) {
   var rank1Counter = 0;
   var rank2Counter = 0;
   for (var student of students) {
-    if ((student.rank == 2 && rank1Counter > 2) || (student.rank == 3 && rank2Counter > 1) || student.rank > 3) {
-      console.log("return");
+    if ((student.rank == 2 && rank1Counter > 2) || (student.rank == 3 && (rank2Counter > 1 || rank1Counter > 1) || (student.rank > 3))) {
+    
       return
     } else {
+    
     // Table
     var row = rankingTable.insertRow();
 
@@ -235,7 +233,7 @@ function displayRanking(students) {
     var cellPoints = row.insertCell();
     cellPoints.innerText = student.points + "P.";
 
-    if (student.rank == 1) {rank1ounter += 1;}
+    if (student.rank == 1) {rank1Counter += 1;}
     if (student.rank == 2) {rank2Counter += 1;}
   }
 }
