@@ -9,7 +9,7 @@ var questionId;
 var intervalSec;
 intervalSec = setInterval(countDown, 1000);
 studentId = window.location.search.replace("?id=", "");
-console.log(studentId);
+//console.log(studentId);
 
 
 
@@ -28,7 +28,7 @@ socket.onmessage = function(event) {
 
   if(jsonObj.eventType === 'getAllQuestions') {
     questionsArray = jsonObj.questions;
-    console.log(questionsArray);
+    //console.log(questionsArray);
     displayNextQuesion(); // displaying first question 
 
     questionId = questionsArray[index-1].question_Id;
@@ -36,18 +36,18 @@ socket.onmessage = function(event) {
 
   }
   else if (jsonObj.eventType === 'getStatistic') {
-    console.log(jsonObj.correctAnswer);
+    //console.log(jsonObj.correctAnswer);
     if (jsonObj.msg === 'correct'){
-      console.log("correct");
+      //console.log("correct");
       resultMessage.innerText = "Answer is correct.";
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'wrong'){
-      console.log("wrong");
+      //console.log("wrong");
       resultMessage.innerText = "Answer is wrong!";
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'noAnswer'){
-      console.log("noAnswer");
+      //console.log("noAnswer");
       resultMessage.innerText = "You didn't choose any answer!!!";
       displayCorrectAnswer(jsonObj.correctAnswer);
     } 
@@ -66,11 +66,11 @@ socket.onmessage = function(event) {
        }
      }
   } else if (jsonObj.eventType === 'displayRanking') {
-    console.log(jsonObj.students);  
+    //console.log(jsonObj.students);  
     displayRanking(jsonObj.students);
 
   } else if (jsonObj.eventType === 'displayNextQuestion') {
-    console.log("displayNextQuesion");
+    //console.log("displayNextQuesion");
     currentTime = 0;
   }
 };
@@ -167,7 +167,7 @@ function sendSelectedOption(selectedOption) {
     questionId: questionId,
     studentId: studentId,
   }));
-  console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
+  //console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
 };
 
 function getStatistic() {
@@ -219,7 +219,7 @@ function displayRanking(students) {
   var rank2Counter = 0;
   for (var student of students) {
     if ((student.rank == 2 && rank1Counter > 2) || (student.rank == 3 && rank2Counter > 1) || student.rank > 3) {
-      console.log("return");
+      //console.log("return");
       return
     } else {
     // Table
