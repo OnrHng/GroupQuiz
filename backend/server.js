@@ -93,7 +93,7 @@ app.post('/postQuestions', (req, res) => {
 
     (err, result) => {
       if (err) throw err;
-      console.log("created a new question created with id ", result.insertId);
+      //console.log("created a new question created with id ", result.insertId);
       res.json({ id: result.insertId });
     }
   );
@@ -141,7 +141,7 @@ app.get('/generateCode', function(req, res) {
 
 app.get('/quizStart', function(req, res) {
   // quiz code
-  console.log(praticipationCode);
+  //console.log(praticipationCode);
 
   res.json({praticipationCode:praticipationCode});
 });
@@ -151,12 +151,12 @@ app.get('/quizStart', function(req, res) {
 //websocket methods
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
+    //console.log('received: %s', message);
     var jsonObj = JSON.parse(message);
 
     if (jsonObj.eventType === 'joinNewStudent') {
       newStudent(ws, jsonObj.data.participationName);
-      console.log(students);
+      //console.log(students);
 
       studentsNames = studentsNames + " " + jsonObj.data.participationName;
       sendToAllClients(JSON.stringify({type: 'joinNewStudent', names: studentsNames}));
@@ -182,7 +182,7 @@ wss.on('connection', function connection(ws) {
 
           students[jsonObj.studentId].selectedOption = jsonObj.selectedOption;
           
-          console.log(wss.clients);
+          //console.log(wss.clients);
     
           if (jsonObj.selectedOption === "option1") {
             optionsStatistics.option1 += 1;
@@ -251,7 +251,7 @@ wss.on('connection', function connection(ws) {
 function newStudent(ws, name) {
   id = crypto.randomBytes(8).toString('hex');
   students[id] = { name: name, selectedOption: null, points: 0 };
-  console.log("new user connected, id: " + id);
+  //console.log("new user connected, id: " + id);
   ws.send(JSON.stringify({ eventType: 'ID', id: id }));
 }
 
