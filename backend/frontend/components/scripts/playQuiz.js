@@ -9,14 +9,13 @@ var questionId;
 var intervalSec;
 intervalSec = setInterval(countDown, 1000);
 studentId = window.location.search.replace("?id=", "");
-console.log(studentId);
 
 
 
 // web socket on frontend , should implement here
 var socket = new WebSocket("wss://play-group-quiz.herokuapp.com/");
 socket.onopen = function(e) {
-  console.log("[open] Connection established");
+  // console.log("[open] Connection established");
   socket.send(JSON.stringify({eventType: 'getAllQuestions'}));
 };
 
@@ -28,7 +27,6 @@ socket.onmessage = function(event) {
 
   if(jsonObj.eventType === 'getAllQuestions') {
     questionsArray = jsonObj.questions;
-    console.log(questionsArray);
     displayNextQuesion(); // displaying first question 
 
     questionId = questionsArray[index-1].question_Id;
@@ -36,18 +34,17 @@ socket.onmessage = function(event) {
 
   }
   else if (jsonObj.eventType === 'getStatistic') {
-    console.log(jsonObj.correctAnswer);
     if (jsonObj.msg === 'correct'){
-      console.log("correct");
+      // console.log("correct");
       resultMessage.innerText = "Answer is correct.";
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'wrong'){
-      console.log("wrong");
+      // console.log("wrong");
       resultMessage.innerText = "Answer is wrong!";
       displayWrongAnswer(selectedOption);
       displayCorrectAnswer(jsonObj.correctAnswer);
     } else if (jsonObj.msg === 'noAnswer'){
-      console.log("noAnswer");
+      // console.log("noAnswer");
       resultMessage.innerText = "You didn't choose any answer!!!";
       displayCorrectAnswer(jsonObj.correctAnswer);
     } 
@@ -66,26 +63,24 @@ socket.onmessage = function(event) {
        }
      }
   } else if (jsonObj.eventType === 'displayRanking') {
-    console.log(jsonObj.students);  
     displayRanking(jsonObj.students);
 
   } else if (jsonObj.eventType === 'displayNextQuestion') {
-    console.log("displayNextQuesion");
     currentTime = 0;
   }
 };
 
 socket.onclose = function(event) {
   if (event.wasClean) {
-    console.log(`[close] Connection closed cleanly, reason=${event.reason}`);
+    // console.log(`[close] Connection closed cleanly, reason=${event.reason}`);
   } else {
     // e.g. server process killed or network down
-    console.log('[close] Connection died, code:' + event.code);
+    // console.log('[close] Connection died, code:' + event.code);
   }
 };
 
 socket.onerror = function(error) {
-  console.log(`[error] ${error.message}`);
+  // console.log(`[error] ${error.message}`);
 };
 
 
@@ -105,7 +100,6 @@ function displayNextQuesion() {
         buttonArray[1].innerText = questionsArray[index].option2;
         buttonArray[2].innerText = questionsArray[index].option3;
         buttonArray[3].innerText = questionsArray[index].option4;
-        console.log(index);
         index++;
         return true;
 
@@ -167,7 +161,7 @@ function sendSelectedOption(selectedOption) {
     questionId: questionId,
     studentId: studentId,
   }));
-  console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
+  // console.log(`questionId: ${questionId}, selectedOption: ${selectedOption}`);
 };
 
 function getStatistic() {
@@ -218,7 +212,7 @@ function displayRanking(students) {
   var rank2Counter = 0;
   for (var student of students) {
     if ((student.rank == 3 && rank2Counter == 2) || student.rank < 3) {
-      console.log("return");
+      // console.log("return");
       return
     } else {
     // Table
