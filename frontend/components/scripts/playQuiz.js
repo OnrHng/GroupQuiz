@@ -164,7 +164,6 @@ function sendSelectedOption(selectedOption) {
     questionId: questionId,
     studentId: studentId,
   }));
-
 };
 
 function getStatistic() {
