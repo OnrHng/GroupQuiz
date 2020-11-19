@@ -69,18 +69,18 @@ socket.onmessage = function(event) {
   }
 };
 
-socket.onclose = function(event) {
-  if (event.wasClean) {
-    // console.log(`[close] Connection closed cleanly, reason=${event.reason}`);
-  } else {
-    // e.g. server process killed or network down
-    // console.log('[close] Connection died, code:' + event.code);
-  }
-};
+// socket.onclose = function(event) {
+//   if (event.wasClean) {
+//     // console.log(`[close] Connection closed cleanly, reason=${event.reason}`);
+//   } else {
+//     // e.g. server process killed or network down
+//     // console.log('[close] Connection died, code:' + event.code);
+//   }
+// };
 
-socket.onerror = function(error) {
-  // console.log(`[error] ${error.message}`);
-};
+// socket.onerror = function(error) {
+//   // console.log(`[error] ${error.message}`);
+// };
 
 
 
