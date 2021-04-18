@@ -2,5 +2,4 @@
 
 
 
-
-Thanks David, Maggie Safaa, Milica, Juily und Onur.
+Play Group Quiz here https://play-group-quiz.herokuapp.com/
